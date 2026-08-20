@@ -10,13 +10,14 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0004](docs/architecture/decisions/0004-stek-rust-axum-react-vite.md) | 2026-08-20 | Accepted | Rust-бэкенд одним бинарём + React 19/Vite 8; Bun — toolchain; C-С1: idle-ресурсы = деньги |
 | [0003](docs/architecture/decisions/0003-kanon-pamyati-postgres-pgvector-dver.md) | 2026-08-20 | Accepted | Канон памяти в Postgres; трёхслойный recall с бюджетами; владелец-редактор; pgvector-дверь по замеру; EverOS — донор идей |
 | [0002](docs/architecture/decisions/0002-gefest-s-nulya-bez-vault.md) | 2026-08-20 | Accepted | С нуля в этом репо; AD — страховка, не фундамент; фиксация только здесь, без vault |
 | [0001](docs/architecture/decisions/0001-sobstvennyj-orkestrator-claude-code.md) | 2026-08-20 | Accepted (amended by 0002) | Свой тонкий оркестратор вместо yao/DSH; Ф0 — доставка через владение процессом; Ф0.5 — проектирование по образцам yao/DSH |
 
 ## Структура (C4, container)
 
-См. [docs/architecture/diagrams/c4-container-orkestrator.md](docs/architecture/diagrams/c4-container-orkestrator.md). Компоненты: Панель (Starlette+React) ↔ Postgres (append-only журнал, задачи, команды, документы, память) ↔ Раннер-супервизор → Прослойка CLI → исполнители `claude -p --resume`. Периметр — только VPN/mesh. Внешние: GitHub/GitLab (факты мержей — «done = состояние внешнего мира»), heartbeat, бэкап вне хоста.
+См. [docs/architecture/diagrams/c4-container-orkestrator.md](docs/architecture/diagrams/c4-container-orkestrator.md). Компоненты: один Rust-бинарь (axum: панель-API + статика фронта React 19/Vite 8; tokio: раннер-супервизор; внутри — прослойка CLI) ↔ Postgres (append-only журнал, задачи, команды, документы, память) → исполнители `claude -p --resume`. Периметр — только VPN/mesh. Внешние: GitHub/GitLab (факты мержей — «done = состояние внешнего мира»), heartbeat, бэкап вне хоста.
 
 ## Атрибуты качества (принятая поза)
 
@@ -28,6 +29,7 @@
 ## Ограничения (формально приняты)
 
 - Исполнители — Claude Code по подписке Max, без API-токенов (C-Н1); вспомогательные LLM — бесплатные через OpenRouter.
+- Биллинг сервера — по потреблению ресурсов (C-С1): резидентные процессы обязаны быть минимальными; лишние рантаймы в проде не заводятся (ADR-0004).
 - Один оператор (F7): каждый компонент обязан выживать без присмотра.
 - Один источник истины — общая память; личные памяти согласуются; vault выводится, привычки покрываются (C-Н5, С7). Для самого Гефеста vault не используется с первого дня: задачи, ADR, learnings — в этом репозитории (ADR-0002).
 - Compose; Kubernetes — только при появлении причины (П-1).

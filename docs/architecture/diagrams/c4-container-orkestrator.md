@@ -8,9 +8,9 @@ graph TB
 
     subgraph VPN["Периметр: VPN/mesh (WireGuard/Tailscale) — публичного endpoint нет"]
         subgraph Host["Сервер (docker-compose)"]
-            Panel["Панель — Starlette + React<br/>доска задач, детекторы расхождений,<br/>документы (wiki-линки, русский FTS)"]
+            Panel["Панель — axum (Rust), фронт React 19 + Vite 8<br/>доска задач, детекторы расхождений,<br/>документы (wiki-линки, русский FTS)"]
             DB[("Postgres<br/>задачи · журнал (append-only) ·<br/>команды · документы · память")]
-            Runner["Раннер-супервизор — Python (asyncio)<br/>владеет процессами исполнителей;<br/>идемпотентная доставка (delivered);<br/>переподхват после рестарта;<br/>внутри — прослойка CLI (модуль):<br/>флаги, stream-json, ~/.claude, health-check кредов"]
+            Runner["Раннер-супервизор — Rust (tokio), тот же бинарь<br/>владеет процессами исполнителей;<br/>идемпотентная доставка (delivered);<br/>переподхват после рестарта;<br/>внутри — прослойка CLI (модуль):<br/>флаги, stream-json, ~/.claude, health-check кредов"]
             A1["claude -p --resume<br/>исполнитель №1 (worktree)"]
             AN["claude -p --resume<br/>исполнитель №N"]
         end
