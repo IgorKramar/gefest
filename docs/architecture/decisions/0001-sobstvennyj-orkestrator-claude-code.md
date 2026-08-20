@@ -1,7 +1,7 @@
 # ADR-0001: Собственный тонкий оркестратор Claude Code-агентов вместо готовых платформ (yao, DSH)
 
 - **Date**: 2026-08-20
-- **Status**: Accepted
+- **Status**: Accepted (amended by ADR-0002: реализация — с нуля, не эволюция agent-dashboard)
 - **Authors**: Игорь (владелец); deep-цикл `/architect:cycle`
 - Артефакты цикла: discovery / research / design / decision (ред. 2) в `../research/2026-08-20-konsolidaciya-orkestracii-agentov*.md`
 
