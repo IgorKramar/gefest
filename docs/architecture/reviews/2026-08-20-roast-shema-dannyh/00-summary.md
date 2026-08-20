@@ -14,14 +14,15 @@
 
 ## Severity counts
 
-| Role | High | Medium | Low | всего |
+| Role | High | Medium | Low | Total |
 |---|---|---|---|---|
 | Devil-advocate (B) | 6 (B-1,B-2,B-3,B-4,B-6,B-8) | 2 | 0 | 8 |
 | Pragmatist (H) | 2 (H-1,H-5) | 4 | 1 | 7 |
 | Junior-engineer (J) | 2 (J-1,J-2) | 6 | 1 | 9 |
 | Compliance-officer (C) | 2 (C-1,C-2) | 4 | 1 | 7 |
 | Futurist (F) | 1 (F-1) | 5 | 2 | 8 |
-| **Итого** | **13** | **21** | **5** | **39** |
+
+Всего по ролям: 13 high / 21 medium / 5 low (арифметика для навигации, не сравнимость severity между ролями).
 
 ## Cross-cutting concerns
 
