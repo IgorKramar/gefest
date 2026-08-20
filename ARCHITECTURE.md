@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0005](docs/architecture/decisions/0005-shema-dannyh-zhurnal-plus-state.md) | 2026-08-20 | Accepted | Журнал+состояние одной транзакцией; v1-ядро 14 таблиц; RLS с v1; gap-detection канала панели; trust-дверь D-16 |
 | [0004](docs/architecture/decisions/0004-stek-rust-axum-react-vite.md) | 2026-08-20 | Accepted | Rust-бэкенд одним бинарём + React 19/Vite 8; Bun — toolchain; C-С1: idle-ресурсы = деньги |
 | [0003](docs/architecture/decisions/0003-kanon-pamyati-postgres-pgvector-dver.md) | 2026-08-20 | Accepted | Канон памяти в Postgres; трёхслойный recall с бюджетами; владелец-редактор; pgvector-дверь по замеру; EverOS — донор идей |
 | [0002](docs/architecture/decisions/0002-gefest-s-nulya-bez-vault.md) | 2026-08-20 | Accepted | С нуля в этом репо; AD — страховка, не фундамент; фиксация только здесь, без vault |

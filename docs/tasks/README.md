@@ -10,5 +10,6 @@
 | [GF-2](GF-2-runner-supervizor.md) | Ф0: раннер-супервизор — spawn/resume, stream-json, идемпотентная доставка, переподхват | backlog | Ф0 |
 | [GF-3](GF-3-strahovki.md) | Ф0: три страховки — health-check кредов (ловушка S1b), внешний heartbeat, бэкап с проверенным restore | backlog | Ф0 |
 | [GF-4](GF-4-kvartalnaya-reviziya.md) | Квартальная ревизия границ пересмотра ADR-0001 (первая — до 2026-11-20) | backlog | процесс |
+| [GF-5](GF-5-migracii-v1-yadra.md) | Миграции v1-ядра схемы (14 таблиц + audit_log, RLS) + смоук/отрицательные тесты | backlog | Ф0.5→Ф1 |
 
-Порядок: GF-1 → GF-2 → GF-3 (GF-2/GF-3 стартуют после принятия ADR по модели доставки из GF-1 — строить раннер до схемы означало бы повторить историю agent-dashboard).
+Порядок: GF-1 (осталось: D-3…D-7) → GF-5 (схема, ADR-0005 принят) → GF-2/GF-3.
