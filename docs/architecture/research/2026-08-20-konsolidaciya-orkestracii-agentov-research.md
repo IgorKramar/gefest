@@ -41,7 +41,7 @@
 ## Сводные выводы для Design
 
 1. **DSH как панель управления Claude Code-агентами сегодня непригоден** (R3): исполнитель невидим и невозобновляем. Пригоден как источник идей и как возможная платформа *позже* (ядро уже растит интеграцию Claude Code — R2).
-2. **yao — единственная готовая платформа, реально стримящая и возобновляющая Claude Code**, и попадает в «self-hosted + панель + мобильность». Против него: неподтверждённая работа с подпиской (риск C-Н1), rc-темп, лицензионные особенности, недоказанный API доски и мобильное управление, C7 (wiki-линки/бэклинки) не проверен.
+2. **yao — единственная готовая платформа, реально стримящая и возобновляющая Claude Code**, и попадает в «self-hosted + панель + мобильность». Против него: неподтверждённая работа с подпиской (риск C-Н1), rc-темп, лицензионные особенности, недоказанный API доски и мобильное управление, С7 (wiki-линки/бэклинки) не проверен.
 3. **Собственный тонкий оркестратор** (эволюция agent-dashboard: headless `claude -p --resume` + stream-json + подтверждаемая доставка + доска) технически ничем не заблокирован — все примитивы официально поддержаны (R1); это самый совместимый с C-Н1 путь, ценой разработки UI/доски/памяти самим.
 4. Материальная неопределённость, требующая **практического спайка до решения**: (а) yao + подписочный OAuth (монтирование `~/.claude` в песочницу); (б) поведение нескольких параллельных headless-сессий под Max 20x.
 5. Research **не отменяет** discovery: проблема и ограничения в силе. Уточнение сил: F4 (незрелость) подтверждена фактами для обоих кандидатов; C-Н1 конфликтует с SDK-путём и, возможно, с yao.
@@ -55,6 +55,22 @@
 
 **Вывод:** страх «подписка на сервере невозможна» опровергнут для обоих кандидатов (A и B). Ворота A открыты условно — остаётся проверка на уровне движка (пилот).
 
-## Источники
+## Sources
 
-Первичные отчёты четырёх исследований — в истории сессии; ключевые ссылки: официальные доки Claude Code (headless, authentication, agent-sdk), releases DSH rc.7/rc.8, исходники `packages/subagent/subagent-claude-code`, `packages/host/webserver`, `packages/experimental/agent-team`, `packages/llm/llm-pi-ai`; yao: LICENSE, `agent/sandbox/v2/claude/command.go`, `llmprovider/presets.yml`, yaoagents-docs (built-in-agents, api-direct-connect, installation), releases rc8–rc15.
+1. Claude Code headless mode — https://code.claude.com/docs/en/headless.md (проверено 2026-08-20)
+2. Claude Code authentication — https://code.claude.com/docs/en/authentication.md (2026-08-20)
+3. Agent SDK quickstart (только `ANTHROPIC_API_KEY`) — https://code.claude.com/docs/en/agent-sdk/quickstart.md (2026-08-20)
+4. Anthropic Consumer Terms — https://www.anthropic.com/legal/consumer-terms (проверено первоисточником 2026-08-20, после roast C-1)
+5. DSH releases rc.7 (2026-08-17), rc.8 (2026-08-19) — https://github.com/deepseek-ai/deepseek-harness/releases
+6. DSH quickstart / позиция по remote — https://deepseek-harness.github.io/deepseek-harness/en/guide/quickstart (2026-08-20)
+7. Исходники DSH (локальный клон `reference/deepseek-harness`, rc.8): `packages/subagent/subagent-claude-code/`, `packages/host/webserver/`, `packages/experimental/agent-team/`, `packages/llm/llm-pi-ai/`, `packages/bundle/web-app/src/startup.ts`
+8. dsh-agent-teams — https://github.com/NanmiCoder/dsh-agent-teams (+ docs/verification-guide.md, 2026-08-20)
+9. yao LICENSE — https://raw.githubusercontent.com/YaoApp/yao/main/LICENSE и LICENSE.zh-CN (2026-08-20)
+10. yao раннер Claude Code — https://raw.githubusercontent.com/YaoApp/yao/main/agent/sandbox/v2/claude/command.go (+ локальный клон `reference/yao`, 2026-08-20)
+11. yao провайдеры — https://raw.githubusercontent.com/YaoApp/yao/main/llmprovider/presets.yml (2026-08-20)
+12. yaoagents-docs: built-in-agents/claude-code.mdx, integrations/api-direct-connect.mdx, getting-started/installation.mdx — https://github.com/YaoApp/yaoagents-docs (2026-08-20)
+13. yao releases rc8–rc15 (2026-07-23…2026-08-19) — https://github.com/YaoApp/yao/releases
+14. AtlasCloud: DSH review — https://www.atlascloud.ai/blog/tips/deepseek-harness-review (август 2026; вендор, учтено)
+15. MarkTechPost о запуске DSH — https://www.marktechpost.com/2026/08/17/deepseek-ai-releases-deepseek-harness-in-developer-preview/ (2026-08-17)
+
+Полные отчёты четырёх исследований сохранены: roast-каталог `../reviews/2026-08-20-roast-konsolidaciya-orkestracii-agentov/` содержит производные; первичные research-отчёты — в журнале сессии от 2026-08-20 (ключевые факты перенесены в этот дайджест дословно).
