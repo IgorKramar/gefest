@@ -51,7 +51,8 @@
 ## Карта репозитория
 
 - `docs/01–02` — DSH по веб-источникам; `docs/03–04` — ядро Cordis и система плагинов DSH по исходникам; `docs/05` — каталог экосистемы; `docs/06` — yao изнутри (карта заимствований, готов).
-- `docs/architecture/research/` — артефакты deep-цикла (discovery, research, design, decision).
+- `docs/architecture/decision-map.md` — карта открытых решений (D-N) и порядок циклов.
+- `docs/architecture/research/` — артефакты deep-цикла (discovery, research, design, decision) и observe-отчёты.
 - `docs/architecture/reviews/` — roast-артефакты.
 - `docs/architecture/decisions/` — ADR (индекс в README.md).
 - `docs/tasks/` — задачи Гефеста (GF-N), доска в README.
