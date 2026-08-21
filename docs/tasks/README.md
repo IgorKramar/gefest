@@ -12,5 +12,6 @@
 | [GF-4](GF-4-kvartalnaya-reviziya.md) | Квартальная ревизия границ пересмотра ADR-0001 (первая — до 2026-11-20) | backlog | процесс |
 | [GF-5](GF-5-migracii-v1-yadra.md) | Миграции v1-ядра схемы (14 таблиц + audit_log, RLS) + смоук/отрицательные тесты | backlog | Ф0.5→Ф1 |
 | [GF-6](GF-6-infrastruktura-perimetra.md) | Ф0: инфраструктура периметра — два хоста, Headscale+DERP+exit node, passkeys, ключ pgcrypto, пул токенов, алерт-каналы | backlog | Ф0 |
+| [GF-7](GF-7-dokumentnyj-sloj.md) | Ф2: документный слой — CM6/Atomic-редактор, frontmatter, линки/FTS, периодические заметки, виды, импорт vault | backlog | Ф2 |
 
 Порядок: ~~GF-1~~ (done) → GF-5 (схема, ADR-0005 принят) → GF-2/GF-3, GF-6 — параллельно GF-2.

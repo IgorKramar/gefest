@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0013](docs/architecture/decisions/0013-dokumenty-cm6-atomic-frontmatter-vidy.md) | 2026-08-21 | Accepted | Документы: CM6/Atomic (Live Preview); frontmatter-как-источник; сохранённые виды вместо DQL; канон — через pending |
 | [0012](docs/architecture/decisions/0012-ci-github-actions-pr-vorota.md) | 2026-08-21 | Accepted | GitHub Actions; PR-ворота для кода (агенты — только PR); деплой ручным скриптом; CD — дверь |
 | [0011](docs/architecture/decisions/0011-chat-potok-kursory-mailbox-inbox.md) | 2026-08-21 | Accepted | Чат — поток с курсорами (pull), mailbox — инбокс (push); права по проекту; broadcast — только владелец |
 | [0010](docs/architecture/decisions/0010-perimetr-dva-hosta-passkeys-broker.md) | 2026-08-21 | Accepted | Периметр: два хоста (РФ-VM + EU VPS со split-egress к Anthropic); Headscale-tailnet; passkeys; секреты pgcrypto; пул scoped-токенов |
