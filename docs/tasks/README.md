@@ -6,10 +6,11 @@
 
 | № | Задача | Статус | Фаза |
 |---|---|---|---|
-| [GF-1](GF-1-adr-seriya-f05.md) | Ф0.5: ADR-серия D-1…D-7 по decision-map (стек, схема, изоляция, доставка, сессии, CLI, периметр) | backlog | Ф0.5 |
+| [GF-1](GF-1-adr-seriya-f05.md) | Ф0.5: ADR-серия D-1…D-7 по decision-map (стек, схема, изоляция, доставка, сессии, CLI, периметр) | **done** (ADR-0003…0010 приняты) | Ф0.5 |
 | [GF-2](GF-2-runner-supervizor.md) | Ф0: раннер-супервизор — spawn/resume, stream-json, идемпотентная доставка, переподхват | backlog | Ф0 |
 | [GF-3](GF-3-strahovki.md) | Ф0: три страховки — health-check кредов (ловушка S1b), внешний heartbeat, бэкап с проверенным restore | backlog | Ф0 |
 | [GF-4](GF-4-kvartalnaya-reviziya.md) | Квартальная ревизия границ пересмотра ADR-0001 (первая — до 2026-11-20) | backlog | процесс |
 | [GF-5](GF-5-migracii-v1-yadra.md) | Миграции v1-ядра схемы (14 таблиц + audit_log, RLS) + смоук/отрицательные тесты | backlog | Ф0.5→Ф1 |
+| [GF-6](GF-6-infrastruktura-perimetra.md) | Ф0: инфраструктура периметра — два хоста, Headscale+DERP+exit node, passkeys, ключ pgcrypto, пул токенов, алерт-каналы | backlog | Ф0 |
 
-Порядок: GF-1 (осталось: D-3…D-7) → GF-5 (схема, ADR-0005 принят) → GF-2/GF-3.
+Порядок: ~~GF-1~~ (done) → GF-5 (схема, ADR-0005 принят) → GF-2/GF-3, GF-6 — параллельно GF-2.
