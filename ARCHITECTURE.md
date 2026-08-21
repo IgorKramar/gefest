@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0008](docs/architecture/decisions/0008-sessii-vehi-ukazateli-v-syryo.md) | 2026-08-21 | Accepted | Сессии: единая машина состояний; вехи-указатели в сырьё; drill-down — срез raw через API; саммари на границах жизни |
 | [0007](docs/architecture/decisions/0007-dostavka-ukazanij-push-delivered.md) | 2026-08-21 | Accepted | Push раннером в stdin; каузальный delivered; stop = SIGTERM с инвалидацией очереди; `requires_ack`-дверь с бюджетом |
 | [0006](docs/architecture/decisions/0006-izolyaciya-konteiner-na-zadachu.md) | 2026-08-20 | Accepted | Контейнер-на-задачу; брокер ресурсов; секреты только у раннера |
 | [0005](docs/architecture/decisions/0005-shema-dannyh-zhurnal-plus-state.md) | 2026-08-20 | Accepted | Журнал+состояние одной транзакцией; v1-ядро 14 таблиц; RLS с v1; gap-detection канала панели; trust-дверь D-16 |
