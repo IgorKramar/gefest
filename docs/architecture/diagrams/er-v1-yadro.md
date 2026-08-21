@@ -56,23 +56,25 @@ erDiagram
         bigint issued_by FK
         bigint addressee_id FK
         bigint kind_id FK
-        text execution_state "issued|taken|done|failed|rejected (предварит., D-4)"
+        text execution_state "issued|taken|done|failed|rejected (ось исполнения; доставка отдельно, ADR-0007)"
         timestamptz taken_at "lease: повторный захват по таймауту"
         jsonb payload
     }
     command_kinds {
         bigserial id PK
         text key UK "start|stop|answer|note|assign - не строка к исполнению"
+        text class "command | message (ADR-0007: message ждёт queued без эскалации)"
     }
     command_deliveries {
         bigserial id PK
         bigint command_id FK
-        text outcome "sent|delivered|held|denied|expired|undeliverable"
+        text outcome "sent|delivered|cancelled_by_stop|limit_blocked|... (итог - GF-2, ADR-0007)"
     }
     sessions {
         bigserial id PK
         uuid uuid7 UK
-        text state "starting|running|interrupted|completed|failed (предварит., D-5)"
+        text state "spawning|running|waiting_answer|completed|interrupted|failed (ADR-0008)"
+        bigint parent_session_id FK "родословная ретраев (ADR-0008)"
         text claude_session_id
         text summary "пишет исполнитель"
         text raw_path "файл 0700, вне бэкапа"
@@ -81,8 +83,8 @@ erDiagram
     session_events {
         bigserial id PK
         int version "UNIQUE(session_id, version)"
-        text kind "message|tool_call|tool_result|status|error|milestone"
-        jsonb payload "веха, не сырьё; retention 90 дн"
+        text kind "turn_boundary|tool_call|question|status|error|summary_missing (ADR-0008)"
+        jsonb payload "веха без содержимого; turn_boundary несёт (raw_file, byte_from, byte_to) - drill-down; retention 90 дн"
     }
     journal {
         bigserial id PK
@@ -120,6 +122,7 @@ erDiagram
     tasks |o--o{ sessions : "частичный UNIQUE: одна running-сессия"
     actors ||--o{ sessions : "роль-исполнитель"
     sessions ||--o{ session_events : "поток вех; один писатель - раннер"
+    sessions |o--o{ sessions : "parent_session_id (цепочка ретраев)"
     actors ||--o{ journal : "автор / адресат"
     tasks |o--o{ journal : "контекст задачи"
     journal |o--o{ journal : "close -> ref_id (UNIQUE where close)"
@@ -127,4 +130,6 @@ erDiagram
 
 **Всё в диаграмме — из ADR-0005/decision ред. 2, ничего не выведено домыслом.** RLS+FORCE действует на все таблицы ядра; журнальные (task_events, session_events, command_deliveries, journal, audit_log) — append-only триггер-запретами; BRIN по монотонным PK журналов; ключ будущего партиционирования session_events включён в PK заранее.
 
-Смежные виды: машина состояний команды/сессии — `/architect:diagram state` после D-4/D-5 (значения предварительные); поток доставки — `/architect:diagram sequence` после D-4.
+Волна 2 пополнилась ADR-0010: secrets (pgcrypto) и учёт выдач — forward-миграцией вместе с resources/resource_grants.
+
+Смежные виды: `state-sessiya.md` (ADR-0008), `state-ukazanie.md` (ADR-0007), `deployment-perimetr.md` (ADR-0010); поток доставки — `/architect:diagram sequence` при GF-2, по коду.

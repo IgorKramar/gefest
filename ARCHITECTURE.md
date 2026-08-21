@@ -23,7 +23,7 @@
 
 ## Структура (C4, container)
 
-См. [docs/architecture/diagrams/c4-container-orkestrator.md](docs/architecture/diagrams/c4-container-orkestrator.md). Компоненты: один Rust-бинарь (axum: панель-API + статика фронта React 19/Vite 8; tokio: раннер-супервизор; внутри — прослойка CLI) ↔ Postgres (append-only журнал, задачи, команды, документы, память) → исполнители `claude -p --resume`. Периметр — только VPN/mesh. Внешние: GitHub/GitLab (факты мержей — «done = состояние внешнего мира»), heartbeat, бэкап вне хоста.
+См. [c4-container-orkestrator.md](docs/architecture/diagrams/c4-container-orkestrator.md) (приложение) и [deployment-perimetr.md](docs/architecture/diagrams/deployment-perimetr.md) (хосты и сеть, ADR-0010). Компоненты: один Rust-бинарь (axum: owner-листенер на Tailscale-IP с passkeys + MCP-листенер на контейнерном мосту; tokio: раннер-супервизор; внутри — прослойка CLI) ↔ Postgres (append-only журнал, задачи, команды, вехи, память, секреты pgcrypto) → контейнеры задач `claude -p --resume` (egress к Anthropic — через exit node EU). Периметр — tailnet (Headscale). Внешние: GitHub/GitLab (факты мержей — «done = состояние внешнего мира»), heartbeat, алерт-каналы, S3-бэкап. Машины состояний: [state-sessiya.md](docs/architecture/diagrams/state-sessiya.md), [state-ukazanie.md](docs/architecture/diagrams/state-ukazanie.md); данные: [er-v1-yadro.md](docs/architecture/diagrams/er-v1-yadro.md).
 
 ## Атрибуты качества (принятая поза)
 
