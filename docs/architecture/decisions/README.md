@@ -2,6 +2,7 @@
 
 | № | Дата | Статус | Решение |
 |---|---|---|---|
+| [0009](0009-prosloika-cli-uuid7-kontraktnye-testy.md) | 2026-08-21 | Accepted | Прослойка CLI: `--session-id` = UUIDv7 из sessions; пакет граблей yao (SIGKILL после result, setup-failed-ловушка, дренаж строк); thinking в сырьё; контрактные тесты S3–S5 + пин CLI в образе |
 | [0008](0008-sessii-vehi-ukazateli-v-syryo.md) | 2026-08-21 | Accepted | Сессии: единая машина состояний; вехи с указателями в сырьё (drill-down = API-срез raw, 30 дней); tool-вызовы в вехах; саммари при завершении/усыплении; `parent_session_id` |
 | [0007](0007-dostavka-ukazanij-push-delivered.md) | 2026-08-21 | Accepted | Доставка указаний: push раннером в stdin, каузальный delivered (S5), stop = SIGTERM с инвалидацией очереди; `requires_ack`-дверь с бюджетом; сон без остановки контейнера в v1 |
 | [0006](0006-izolyaciya-konteiner-na-zadachu.md) | 2026-08-20 | Accepted | Rootless-контейнер на задачу; Гефест — брокер ресурсов/секретов (комплект при старте, dev-БД клоном шаблона); лимиты с v1; кубер-триггер уточнён |

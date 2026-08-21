@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0009](docs/architecture/decisions/0009-prosloika-cli-uuid7-kontraktnye-testy.md) | 2026-08-21 | Accepted | Прослойка CLI: UUIDv7 сессий из БД; грабли yao обойдены пакетом; контрактные тесты S3–S5; пин CLI в образе |
 | [0008](docs/architecture/decisions/0008-sessii-vehi-ukazateli-v-syryo.md) | 2026-08-21 | Accepted | Сессии: единая машина состояний; вехи-указатели в сырьё; drill-down — срез raw через API; саммари на границах жизни |
 | [0007](docs/architecture/decisions/0007-dostavka-ukazanij-push-delivered.md) | 2026-08-21 | Accepted | Push раннером в stdin; каузальный delivered; stop = SIGTERM с инвалидацией очереди; `requires_ack`-дверь с бюджетом |
 | [0006](docs/architecture/decisions/0006-izolyaciya-konteiner-na-zadachu.md) | 2026-08-20 | Accepted | Контейнер-на-задачу; брокер ресурсов; секреты только у раннера |
