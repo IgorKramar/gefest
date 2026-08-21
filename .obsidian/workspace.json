@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/architecture/diagrams/state-ukazanie.md",
+                "file": "docs/design/tz-web-panel.md",
                 "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "state-ukazanie"
+              "title": "tz-web-panel"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/architecture/diagrams/state-ukazanie.md",
+                "file": "docs/design/tz-web-panel.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/architecture/diagrams/state-ukazanie.md",
+                "file": "docs/design/tz-web-panel.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/architecture/diagrams/state-ukazanie.md",
+                "file": "docs/design/tz-web-panel.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,21 +190,27 @@
   },
   "active": "e1ee4b684d9bddd1",
   "lastOpenFiles": [
+    "docs/architecture/decision-map.md.tmp.10112.7cb45f61d041",
+    "ARCHITECTURE.md.tmp.10112.0149811a5eba",
+    "docs/architecture/decisions/README.md.tmp.10112.874e05d74f7e",
+    "docs/architecture/decisions/0015-dizajn-paneli-kuznitsa.md",
+    "docs/architecture/decisions/0015-dizajn-paneli-kuznitsa.md.tmp.10112.c7d582bf4f19",
+    "docs/architecture/diagrams/state-ukazanie.md",
+    "docs/design/tz-mobile-pwa.md",
+    "docs/design/tz-mobile-pwa.md.tmp.10112.af097da344b4",
+    "docs/design/tz-web-panel.md",
+    "docs/design/tz-web-panel.md.tmp.10112.3a6adda38633",
+    "docs/design",
+    "docs/architecture/research/2026-08-21-dizajn-paneli-decision.md",
+    "docs/architecture/research/2026-08-21-dizajn-paneli-decision.md.tmp.10112.46b212256225",
     "docs/architecture/research/2026-08-21-dizajn-paneli-design.md",
     "docs/architecture/research/2026-08-21-dizajn-paneli-design.md.tmp.10112.148857d71b6e",
     "docs/architecture/research/2026-08-21-dizajn-paneli-research.md",
     "docs/architecture/research/2026-08-21-dizajn-paneli-research.md.tmp.10112.7657691fd5b1",
     "docs/architecture/research/2026-08-21-dizajn-paneli.md.tmp.10112.5c9482f62b9b",
-    "docs/architecture/decision-map.md.tmp.10112.d6305645922d",
     "docs/architecture/research/2026-08-21-dizajn-paneli.md",
-    "docs/architecture/research/2026-08-21-dizajn-paneli.md.tmp.10112.3802d63a69c4",
-    "CONCEPTS.md.tmp.10112.c46746ee0870",
-    "CONCEPTS.md.tmp.10112.467e81bbc7ee",
-    "docs/solutions/best-practices/storozh-protiv-nevozmozhnosti.md.tmp.10112.cfef274f4ecb",
     "CONCEPTS.md",
-    "CONCEPTS.md.tmp.10112.d10457b456f0",
     "docs/solutions/best-practices/storozh-protiv-nevozmozhnosti.md",
-    "docs/solutions/best-practices/storozh-protiv-nevozmozhnosti.md.tmp.10112.4f2ac38ea131",
     "docs/architecture/diagrams/state-sessiya.md",
     "docs/architecture/diagrams/er-v1-yadro.md",
     "docs/architecture/diagrams/deployment-perimetr.md",

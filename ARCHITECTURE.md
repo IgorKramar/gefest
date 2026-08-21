@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0015](docs/architecture/decisions/0015-dizajn-paneli-kuznitsa.md) | 2026-08-21 | Accepted | Дизайн панели: «тёмная кузница»; Base UI под своей айдентикой; сайдбар-IA; PWA с очередью решений; ТЗ — docs/design/ |
 | [0014](docs/architecture/decisions/0014-monorepa-domennaya-shestyorka.md) | 2026-08-21 | Accepted | Монорепа: доменная шестёрка крейтов; mise tasks; embed за флагом; прод-образ из GHCR; CI-фильтры без слепых зон |
 | [0013](docs/architecture/decisions/0013-dokumenty-cm6-atomic-frontmatter-vidy.md) | 2026-08-21 | Accepted | Документы: CM6/Atomic (Live Preview); frontmatter-как-источник; сохранённые виды вместо DQL; канон — через pending |
 | [0012](docs/architecture/decisions/0012-ci-github-actions-pr-vorota.md) | 2026-08-21 | Accepted | GitHub Actions; PR-ворота для кода (агенты — только PR); деплой ручным скриптом; CD — дверь |

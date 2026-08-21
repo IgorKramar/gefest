@@ -2,6 +2,7 @@
 
 | № | Дата | Статус | Решение |
 |---|---|---|---|
+| [0015](0015-dizajn-paneli-kuznitsa.md) | 2026-08-21 | Accepted | Дизайн панели: «тёмная кузница» (огонь = работа), Tektur/Golos/JetBrains Mono, Base UI под своей айдентикой, сайдбар-IA, PWA Агенты·Решения·Чат·Задачи; нормативные ТЗ в docs/design/ |
 | [0014](0014-monorepa-domennaya-shestyorka.md) | 2026-08-21 | Accepted | Монорепа: `crates/{core,db,runner,api,hef,fake-executor}`+`web/`+`infra/`; mise tasks; `.sqlx`-сторож; embed за флагом `embed-static`; образ из GHCR (сборки на прод-VM нет); CI-фильтры без слепых зон; интерим «SQL меняет владелец» |
 | [0013](0013-dokumenty-cm6-atomic-frontmatter-vidy.md) | 2026-08-21 | Accepted | Документы: CM6/Atomic Editor (Live Preview, план Б — форк); frontmatter — источник метаданных; `saved_views` вместо DQL; канон агентам через pending; выборочный импорт vault; v1 без графа/GUI-видов |
 | [0012](0012-ci-github-actions-pr-vorota.md) | 2026-08-21 | Accepted | CI: GitHub Actions (rust/migrations/front по путям); main — PR + зелёный CI, агентские токены без пуша в main; доки владельца — напрямую; деплой ручным скриптом, CD — дверь |
