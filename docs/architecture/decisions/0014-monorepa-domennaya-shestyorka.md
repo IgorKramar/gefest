@@ -3,7 +3,7 @@
 - **Date**: 2026-08-21
 - **Status**: Accepted
 - **Authors**: Игорь (владелец); deep-цикл D-17
-- Артефакты цикла: `../research/2026-08-21-monorepa{,-research,-design,-decision}.md`; roast — `../reviews/2026-08-21-roast-monorepa/00-summary.md`
+- Артефакты цикла: [discovery](../research/2026-08-21-monorepa.md), [research](../research/2026-08-21-monorepa-research.md), [design](../research/2026-08-21-monorepa-design.md), [decision](../research/2026-08-21-monorepa-decision.md); roast — [каталог](../reviews/2026-08-21-roast-monorepa/00-summary.md)
 
 ## Context
 
@@ -18,7 +18,7 @@
 - **Статика:** `bun run build` → embed в `api` (static-serve; hashed `immutable`, `index.html` `no-cache`; пустой dist валит сборку проверкой в `build.rs`); **feature-флаг `embed-static`**: dev/test/rust-job — выключен, docker-job/релиз — включён; полный embed — в merge-queue/nightly; порядок bun→cargo — зависимостью mise-задач.
 - **Раннер задач:** mise tasks (dev = vite-прокси + bacon параллельно; пины Rust и инструментов в `mise.toml`; тот же раннер в CI). justfile не заводится.
 - **Docker/деплой:** `infra/Dockerfile` (bun → cargo-chef → slim); **прод-образ собирает CI → приватный GHCR; `deploy.sh` = `compose pull && up -d`** (сборки на прод-VM нет — линковка не конкурирует с живыми сессиями); `.dockerignore` расширен (`.git/`, `.env*`, `reference/`, `docs/`, ключи); секреты сборки — `--mount=type=secret`; образ исполнителя — `infra/executor-image/`, без кредов в слоях, хранение — тот же GHCR.
-- **CI-фильтры:** rust-job = `crates/**` + корневые `Cargo.toml`/`Cargo.lock` + `.sqlx/**`; contract-job = `tests/contract/**`+`crates/{runner,fake-executor,core}/**`+`infra/executor-image/**` (бамп пина CLI гоняет контракт конструкцией — ворота ADR-0009 CC-8); infra-job на `infra/**`; фильтрация внутри job-а (required-совместимость); nightly/merge-queue — без фильтров; новый каталог = правка фильтров тем же PR.
+- **CI-фильтры:** rust-job = `crates/**` + корневые `Cargo.toml`/`Cargo.lock` + `.sqlx/**`; contract-job = `tests/contract/**`+`crates/{runner,fake-executor,core}/**`+`infra/executor-image/**` (бамп пина CLI гоняет контракт конструкцией — ворота обновления образа исполнителя, ADR-0009); front-/migrations-job — по decision §1 п.9; infra-job на `infra/**`; фильтрация внутри job-а (required-совместимость); nightly/merge-queue — без фильтров; новый каталог = правка фильтров тем же PR.
 - **Контракт:** типы stream-json — в `core`, но `fake-executor` эмитит сырые JSONL-фикстуры (литеральные строки, включая невалидные) — контракт не вырождается в roundtrip своих структур.
 - **Гигиена:** `.gitignore` с `.env*` в скелете («в `.env` — только локальный dev-DSN»); `Cargo.lock` в git; экшены GHA — по SHA; `cargo deny` — отложено записью; TS-типы для `web/` — только генерацией из Rust со сторожем (при открытии двери второго JS-пакета).
 - **Фазировка скелета — три PR:** (1) workspace+крейты+`mise.toml`+CI+гигиена+runbook; (2) dev-контур+флаг; (3) Dockerfile+GHCR (= GF-6).
@@ -41,7 +41,7 @@
 ## Review trail
 
 - 2026-08-21 — Roast, 5 ролей, 37 находок (8/19/10), «Apply and proceed» — [каталог](../reviews/2026-08-21-roast-monorepa/00-summary.md); закрыто ред. 2 decision.
-- 2026-08-21 — Meta-review каталога: конформен (все Pass); M-2 поправлен, M-1 закрыт ред. 2, M-3…M-6 приняты/косметика.
+- 2026-08-21 — Meta-review (каталог roast + этот ADR): [отчёт](../reviews/2026-08-21-meta-review-monorepa.md) — конформно, правки применены.
 - Ревью реализации — `/architect:review` после PR-1 скелета (GF-5).
 
 *Terminology pass: проза русская; идентификаторы (`crates/*`, `workspace.dependencies`, `workspace.lints`, `.sqlx`, `prepare --check`, `SQLX_OFFLINE`, static-serve, `embed-static`, `build.rs`, cargo-chef, GHCR, mise tasks, bacon, clap, JSONL, ts-rs/specta, CC-N, B-N/H-N/J-N/C-N/F-N, D-N, GF-N, ADR-NNNN) без перевода; заголовки — verbatim Nygard.*

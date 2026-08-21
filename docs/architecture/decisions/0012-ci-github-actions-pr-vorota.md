@@ -1,7 +1,7 @@
 # ADR-0012: CI — GitHub Actions с PR-воротами для кода; деплой ручным скриптом, CD — дверь
 
 - **Date**: 2026-08-21
-- **Status**: Accepted
+- **Status**: Accepted (amended in detail by ADR-0014: прод-образ собирает CI → GHCR, `deploy.sh` = pull, сборки на прод-VM нет)
 - **Authors**: Игорь (владелец); light-цикл D-12
 - Артефакты цикла: `../research/2026-08-21-ci-vorota{,-design}.md`
 
