@@ -4,7 +4,7 @@
 
 ```mermaid
 stateDiagram-v2
-    [*] --> spawning: строка создана, процесс стартует (--session-id = UUIDv7)
+    [*] --> spawning: строка создана, старт процесса (session-id = UUIDv7 строки)
 
     spawning --> running: system/init получен, стрим пошёл
     spawning --> failed: setup failed (exit 0 без result + stderr, ловушка S1b)
