@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0011](docs/architecture/decisions/0011-chat-potok-kursory-mailbox-inbox.md) | 2026-08-21 | Accepted | Чат — поток с курсорами (pull), mailbox — инбокс (push); права по проекту; broadcast — только владелец |
 | [0010](docs/architecture/decisions/0010-perimetr-dva-hosta-passkeys-broker.md) | 2026-08-21 | Accepted | Периметр: два хоста (РФ-VM + EU VPS со split-egress к Anthropic); Headscale-tailnet; passkeys; секреты pgcrypto; пул scoped-токенов |
 | [0009](docs/architecture/decisions/0009-prosloika-cli-uuid7-kontraktnye-testy.md) | 2026-08-21 | Accepted | Прослойка CLI: UUIDv7 сессий из БД; грабли yao обойдены пакетом; контрактные тесты S3–S5; пин CLI в образе |
 | [0008](docs/architecture/decisions/0008-sessii-vehi-ukazateli-v-syryo.md) | 2026-08-21 | Accepted | Сессии: единая машина состояний; вехи-указатели в сырьё; drill-down — срез raw через API; саммари на границах жизни |

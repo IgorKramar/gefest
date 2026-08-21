@@ -2,6 +2,7 @@
 
 | № | Дата | Статус | Решение |
 |---|---|---|---|
+| [0011](0011-chat-potok-kursory-mailbox-inbox.md) | 2026-08-21 | Accepted | Чат агентов: append-only поток + курсоры (read = курсор), pull на границах хода; mailbox — единый инбокс с push; права по проекту; эскалация непрочитанного; сабагентам автопередача, чужим — с подтверждением |
 | [0010](0010-perimetr-dva-hosta-passkeys-broker.md) | 2026-08-21 | Accepted | Периметр: РФ-VM + EU VPS (exit node+Headscale+DERP), split-egress к Anthropic; passkeys; секреты в pgcrypto (ключ вне БД); пул scoped-токенов; ресурсы с предложениями агентов; алерты факт+ссылка |
 | [0009](0009-prosloika-cli-uuid7-kontraktnye-testy.md) | 2026-08-21 | Accepted | Прослойка CLI: `--session-id` = UUIDv7 из sessions; пакет граблей yao (SIGKILL после result, setup-failed-ловушка, дренаж строк); thinking в сырьё; контрактные тесты S3–S5 + пин CLI в образе |
 | [0008](0008-sessii-vehi-ukazateli-v-syryo.md) | 2026-08-21 | Accepted | Сессии: единая машина состояний; вехи с указателями в сырьё (drill-down = API-срез raw, 30 дней); tool-вызовы в вехах; саммари при завершении/усыплении; `parent_session_id` |
