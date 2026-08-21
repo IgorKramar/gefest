@@ -2,6 +2,7 @@
 
 | № | Дата | Статус | Решение |
 |---|---|---|---|
+| [0014](0014-monorepa-domennaya-shestyorka.md) | 2026-08-21 | Accepted | Монорепа: `crates/{core,db,runner,api,hef,fake-executor}`+`web/`+`infra/`; mise tasks; `.sqlx`-сторож; embed за флагом `embed-static`; образ из GHCR (сборки на прод-VM нет); CI-фильтры без слепых зон; интерим «SQL меняет владелец» |
 | [0013](0013-dokumenty-cm6-atomic-frontmatter-vidy.md) | 2026-08-21 | Accepted | Документы: CM6/Atomic Editor (Live Preview, план Б — форк); frontmatter — источник метаданных; `saved_views` вместо DQL; канон агентам через pending; выборочный импорт vault; v1 без графа/GUI-видов |
 | [0012](0012-ci-github-actions-pr-vorota.md) | 2026-08-21 | Accepted | CI: GitHub Actions (rust/migrations/front по путям); main — PR + зелёный CI, агентские токены без пуша в main; доки владельца — напрямую; деплой ручным скриптом, CD — дверь |
 | [0011](0011-chat-potok-kursory-mailbox-inbox.md) | 2026-08-21 | Accepted | Чат агентов: append-only поток + курсоры (read = курсор), pull на границах хода; mailbox — единый инбокс с push; права по проекту; эскалация непрочитанного; сабагентам автопередача, чужим — с подтверждением |

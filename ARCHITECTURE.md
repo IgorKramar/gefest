@@ -10,6 +10,7 @@
 
 | ADR | Дата | Статус | Суть |
 |---|---|---|---|
+| [0014](docs/architecture/decisions/0014-monorepa-domennaya-shestyorka.md) | 2026-08-21 | Accepted | Монорепа: доменная шестёрка крейтов; mise tasks; embed за флагом; прод-образ из GHCR; CI-фильтры без слепых зон |
 | [0013](docs/architecture/decisions/0013-dokumenty-cm6-atomic-frontmatter-vidy.md) | 2026-08-21 | Accepted | Документы: CM6/Atomic (Live Preview); frontmatter-как-источник; сохранённые виды вместо DQL; канон — через pending |
 | [0012](docs/architecture/decisions/0012-ci-github-actions-pr-vorota.md) | 2026-08-21 | Accepted | GitHub Actions; PR-ворота для кода (агенты — только PR); деплой ручным скриптом; CD — дверь |
 | [0011](docs/architecture/decisions/0011-chat-potok-kursory-mailbox-inbox.md) | 2026-08-21 | Accepted | Чат — поток с курсорами (pull), mailbox — инбокс (push); права по проекту; broadcast — только владелец |
@@ -25,6 +26,8 @@
 | [0001](docs/architecture/decisions/0001-sobstvennyj-orkestrator-claude-code.md) | 2026-08-20 | Accepted (amended by 0002) | Свой тонкий оркестратор вместо yao/DSH; Ф0 — доставка через владение процессом; Ф0.5 — проектирование по образцам yao/DSH |
 
 ## Структура (C4, container)
+
+**Раскладка репозитория (канон «куда класть код», ADR-0014):** `crates/core` — типы/перечисления-истина/ошибки (без tokio/axum; sqlx — optional feature для `db`); `crates/db` — прослойка доступа, query-макросы, migrations; `crates/runner` — супервизор, прослойка CLI, брокер комплектов; `crates/api` — axum-листенеры + rmcp + embed статики, модули по доменам (documents/chat/mcp/views); `crates/hef` — тонкий бинарь (clap-подкоманды); `crates/fake-executor` — тестовый симулятор (сырые JSONL-фикстуры); `web/` — React 19/Vite 8 (Bun); `infra/` — Dockerfile-ы (прод + executor-image), compose, deploy; `tests/contract/` — контрактные тесты S3–S5; `docs/` — архитектура/задачи/база знаний. Инструкции агентам ссылаются сюда, не дублируют.
 
 См. [c4-container-orkestrator.md](docs/architecture/diagrams/c4-container-orkestrator.md) (приложение) и [deployment-perimetr.md](docs/architecture/diagrams/deployment-perimetr.md) (хосты и сеть, ADR-0010). Компоненты: один Rust-бинарь (axum: owner-листенер на Tailscale-IP с passkeys + MCP-листенер на контейнерном мосту; tokio: раннер-супервизор; внутри — прослойка CLI) ↔ Postgres (append-only журнал, задачи, команды, вехи, память, секреты pgcrypto) → контейнеры задач `claude -p --resume` (egress к Anthropic — через exit node EU). Периметр — tailnet (Headscale). Внешние: GitHub/GitLab (факты мержей — «done = состояние внешнего мира»), heartbeat, алерт-каналы, S3-бэкап. Машины состояний: [state-sessiya.md](docs/architecture/diagrams/state-sessiya.md), [state-ukazanie.md](docs/architecture/diagrams/state-ukazanie.md); данные: [er-v1-yadro.md](docs/architecture/diagrams/er-v1-yadro.md).
 
