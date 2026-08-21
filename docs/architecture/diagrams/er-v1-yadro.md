@@ -130,6 +130,6 @@ erDiagram
 
 **Всё в диаграмме — из ADR-0005/decision ред. 2, ничего не выведено домыслом.** RLS+FORCE действует на все таблицы ядра; журнальные (task_events, session_events, command_deliveries, journal, audit_log) — append-only триггер-запретами; BRIN по монотонным PK журналов; ключ будущего партиционирования session_events включён в PK заранее.
 
-Волна 2 пополнилась ADR-0010: secrets (pgcrypto) и учёт выдач — forward-миграцией вместе с resources/resource_grants.
+Волна 2 пополнилась после v1-эскиза: secrets (pgcrypto) + учёт выдач (ADR-0010); chat_messages + курсоры читателей + `read` инбокса (ADR-0011); documents/document_events/links/tags/saved_views + frontmatter-jsonb (ADR-0013) — всё forward-миграциями вместе с resources/resource_grants и memory_*.
 
 Смежные виды: `state-sessiya.md` (ADR-0008), `state-ukazanie.md` (ADR-0007), `deployment-perimetr.md` (ADR-0010); поток доставки — `/architect:diagram sequence` при GF-2, по коду.

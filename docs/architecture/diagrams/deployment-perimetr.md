@@ -1,6 +1,6 @@
-# Deployment: периметр Гефеста — два хоста, tailnet, split-egress (ADR-0010)
+# Deployment: периметр Гефеста — два хоста, tailnet, split-egress (ADR-0010, ADR-0014)
 
-Что где запущено и как соединено. Логика приложения — `c4-container-orkestrator.md`.
+Что где запущено и как соединено. Логика приложения — `c4-container-orkestrator.md`. Прод-образ на РФ-VM не собирается: CI пушит в GHCR, VM тянет (ADR-0014).
 
 ```mermaid
 graph TB
@@ -24,6 +24,7 @@ graph TB
 
     Anthropic["api.anthropic.com<br/>(вне РФ-доступа)"]
     Git["GitHub / GitLab"]
+    GHCR["GHCR (приватный)<br/>прод-образ + образ исполнителя;<br/>собирает GitHub Actions"]
     S3["S3 РФ-провайдера<br/>(бэкап pg_dump)"]
 
     Laptop -- "координация (HTTPS)" --> HS
@@ -36,8 +37,9 @@ graph TB
     Exit -- "HTTPS (европейский IP)" --> Anthropic
     Cont -- "git push (напрямую, без exit node)" --> Git
     Bin -- "pg_dump ежесуточно (шифрован)" --> S3
+    RF -- "deploy.sh: docker compose pull (сборки на VM нет)" --> GHCR
     Bin --- PG
     Bin --- Cont
 ```
 
-Заземлено в ADR-0010; курсивных домыслов нет. Аварийный путь (SSH/консоль провайдера при падении tailnet) и алерт-каналы не показаны, чтобы не перегружать вид — они в ADR-0010. Падение EU VPS: существующие tailnet-связи живут (ключи у клиентов), теряются Anthropic-egress и приём новых нод — восстановление по снапшоту (GF-3/GF-6).
+Заземлено в ADR-0010/0014; курсивных домыслов нет. Аварийный путь (SSH/консоль провайдера при падении tailnet) и алерт-каналы не показаны, чтобы не перегружать вид — они в ADR-0010. Падение EU VPS: существующие tailnet-связи живут (ключи у клиентов), теряются Anthropic-egress и приём новых нод — восстановление по снапшоту (GF-3/GF-6).
