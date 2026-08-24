@@ -1,0 +1,46 @@
+[workspace]
+members = [
+    "crates/core",
+    "crates/db",
+    "crates/runner",
+    "crates/api",
+    "crates/hef",
+    "crates/fake-executor",
+]
+# Виртуальный workspace (корень без [package]) не выводит resolver из edition —
+# выводить не из чего. Без явного значения молча берётся resolver 1.
+resolver = "3"
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+license = "Proprietary"
+repository = "https://github.com/IgorKramar/gefest"
+
+# Контракт версий и фич. В PR-1 эти зависимости не подключает ни один крейт:
+# по правилу H-4 (ADR-0014) реальные подключения приходят отдельными PR.
+[workspace.dependencies]
+tokio = { version = "1", default-features = false }
+sqlx = { version = "0.9", default-features = false, features = [
+    "runtime-tokio",
+    # TLS-оси в 0.9 расщеплены по crypto-провайдеру и источнику корней.
+    # Голая tls-rustls компилируется, но рабочего бэкенда для Postgres не даёт.
+    "tls-rustls-ring-webpki",
+    "postgres",
+    "uuid",
+    "time",
+    "migrate",
+    "json",
+    # default-features = false снимает и нужные дефолты: без macros нет
+    # query!/migrate!, без derive нет FromRow.
+    "macros",
+    "derive",
+] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+# Внутри таблицы clippy префикс clippy:: не пишется — имя таблицы уже задаёт
+# инструмент. Ключ clippy::all делает манифест невалидным.
+[workspace.lints.clippy]
+all = "warn"

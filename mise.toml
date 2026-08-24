@@ -1,0 +1,70 @@
+# Единственный раннер задач Гефеста (ADR-0014). justfile не заводится:
+# два раннера одновременно дают дрейф.
+#
+# Те же определения выполняются локально и в CI — CI вызывает `mise run`,
+# а не дублирует команды в workflow.
+
+[tools]
+# Версия обязана совпадать с rust-toolchain.toml; сторожится
+# `mise run guard:toolchain-pin`.
+rust = "1.98.0"
+# Пин требует ADR-0014 §5. В CI НЕ ставится: backend cargo: собирает из
+# исходников (транзитивное дерево резолвится заново, build.rs исполняются на
+# раннере), а ни один шаг CI в PR-1 sqlx-cli не вызывает.
+"cargo:sqlx-cli" = "0.9.0"
+
+[tasks.build]
+description = "Собрать весь workspace"
+run = "cargo build --workspace --locked"
+
+[tasks.test]
+description = "Прогнать тесты всего workspace"
+run = "cargo test --workspace --locked"
+
+[tasks.fmt]
+description = "Отформатировать код"
+run = "cargo fmt --all"
+
+[tasks."fmt:check"]
+description = "Проверить форматирование, не меняя файлы"
+run = "cargo fmt --all -- --check"
+
+[tasks.lint]
+description = "Clippy с предупреждениями как ошибками"
+# -D warnings стоит на шаге, а не в глобальном RUSTFLAGS: глобальный
+# вариант ломает кэш-ключи и протекает в build/test.
+run = "cargo clippy --workspace --all-targets --locked -- -D warnings"
+
+[tasks."sqlx:prepare"]
+description = "Перегенерировать .sqlx (нужен живой мигрированный Postgres)"
+run = "cargo sqlx prepare --workspace"
+
+[tasks."sqlx:check"]
+description = "Проверить синхронность .sqlx (НУЖЕН живой Postgres и DATABASE_URL)"
+# В CI PR-1 не вызывается: сторожить нечего (нет query!, нет .sqlx), а
+# честного пути до зелёного без БД не существует. См. crates/db/README.md.
+run = "cargo sqlx prepare --check --workspace"
+
+[tasks."guard:core-graph"]
+description = "hef-core обязан оставаться чистым: без tokio, axum и sqlx по умолчанию"
+run = "./scripts/guard-core-graph.sh"
+
+[tasks."guard:sqlx-step"]
+description = "Появление query! обязано сопровождаться CI-шагом prepare --check"
+run = "./scripts/guard-sqlx-step.sh"
+
+[tasks."guard:toolchain-pin"]
+description = "Версия Rust в mise.toml и rust-toolchain.toml обязана совпадать"
+run = "./scripts/guard-toolchain-pin.sh"
+
+[tasks.ci]
+description = "Все проверки, доступные без внешних ресурсов"
+depends = [
+    "fmt:check",
+    "lint",
+    "build",
+    "test",
+    "guard:core-graph",
+    "guard:sqlx-step",
+    "guard:toolchain-pin",
+]
