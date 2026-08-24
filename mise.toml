@@ -57,6 +57,10 @@ run = "./scripts/guard-sqlx-step.sh"
 description = "Версия Rust в mise.toml и rust-toolchain.toml обязана совпадать"
 run = "./scripts/guard-toolchain-pin.sh"
 
+[tasks."guard:selftest"]
+description = "Сторожа обязаны уметь краснеть: red/green-проверка самих сторожей"
+run = "./scripts/guard-selftest.sh"
+
 [tasks.ci]
 description = "Все проверки, доступные без внешних ресурсов"
 depends = [
@@ -67,4 +71,5 @@ depends = [
     "guard:core-graph",
     "guard:sqlx-step",
     "guard:toolchain-pin",
+    "guard:selftest",
 ]

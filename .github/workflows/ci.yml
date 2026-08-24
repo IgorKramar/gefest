@@ -22,6 +22,13 @@ concurrency:
 
 env:
   CARGO_TERM_COLOR: always
+  # `mise run` по умолчанию доустанавливает недостающие инструменты активного
+  # конфига перед запуском задачи — то есть install_args: rust ниже сам по
+  # себе НЕ спасает от сборки sqlx-cli из исходников. Без этой настройки
+  # первый же `mise run` тянет cargo:sqlx-cli, и заявленная экономия
+  # supply-chain-поверхности остаётся только в комментарии.
+  # Локальная работа не затронута: там автоустановка удобна и остаётся.
+  MISE_TASK_RUN_AUTO_INSTALL: 'false'
 
 jobs:
   rust:
@@ -100,6 +107,14 @@ jobs:
       - name: Сторож согласованности пина Rust
         if: steps.changes.outputs.rust == 'true'
         run: mise run guard:toolchain-pin
+
+      # Проверка самих сторожей: каждый обязан уметь покраснеть. Ревью PR-1
+      # нашло два сторожа, уже неспособных сработать, — оба прошли ручную
+      # проверку. Здесь же сверяются два списка проверок: объявленный в
+      # mise.toml и вызываемый этим workflow.
+      - name: Сторожа способны краснеть
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run guard:selftest
 
       # Шага `sqlx prepare --check` здесь НЕТ намеренно, а не по забывчивости.
       #
@@ -225,8 +240,16 @@ jobs:
           filters: |
             infra:
               - 'infra/**'
+              # executor-image исключён намеренно: этот подкаталог уже живой —
+              # бамп пина CLI гоняет контрактные тесты по построению (ворота
+              # ADR-0009, см. contract-job). Без исключения тот же коммит
+              # попадал бы и сюда, в заглушку с exit 1, и у легитимного
+              # изменения не было бы честного пути до зелёного на required
+              # check. Это ровно тот сторож против невозможности, который
+              # запрещает docs/solutions/best-practices/storozh-protiv-nevozmozhnosti.md
+              - '!infra/executor-image/**'
 
-      # Каталог infra/ и сборка образа приходят в PR-3 (= GF-6).
+      # Остальной infra/ и сборка образа приходят в PR-3 (= GF-6).
       - name: Заглушка до появления infra/
         if: steps.changes.outputs.infra == 'true'
         run: |
