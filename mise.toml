@@ -13,13 +13,36 @@ rust = "1.98.0"
 # раннере), а ни один шаг CI в PR-1 sqlx-cli не вызывает.
 "cargo:sqlx-cli" = "0.9.0"
 
+[tasks."db:up"]
+description = "Поднять локальный Postgres (порт 5434) и дождаться готовности"
+run = "docker compose -f infra/dev/docker-compose.yml up -d --wait"
+
+[tasks."db:down"]
+description = "Остановить локальный Postgres, том сохранить"
+run = "docker compose -f infra/dev/docker-compose.yml down"
+
+[tasks.migrate]
+description = "Применить миграции схемы бинарём hef (DSN мигратора из DATABASE_URL)"
+run = "cargo run -p hef --quiet -- migrate"
+
+[tasks."db:reset"]
+description = "Снести том и поднять базу заново — роли создаются повторно"
+run = "docker compose -f infra/dev/docker-compose.yml down -v && docker compose -f infra/dev/docker-compose.yml up -d --wait"
+
 [tasks.build]
 description = "Собрать весь workspace"
 run = "cargo build --workspace --locked"
 
 [tasks.test]
-description = "Прогнать тесты всего workspace"
-run = "cargo test --workspace --locked"
+description = "Офлайн-тесты: весь workspace, кроме требующих базы"
+# hef-db исключён намеренно: его тесты на #[sqlx::test] без DATABASE_URL не
+# пропускаются, а паникуют. Задача обязана оставаться выполнимой без базы —
+# ею пользуется агент в контейнере, где базы нет по построению (ADR-0006).
+run = "cargo test --workspace --exclude hef-db --locked"
+
+[tasks."test:db"]
+description = "Тесты схемы и RLS — ТРЕБУЮТ живого Postgres и DATABASE_URL"
+run = "cargo test -p hef-db --locked"
 
 [tasks.fmt]
 description = "Отформатировать код"
@@ -57,6 +80,10 @@ run = "./scripts/guard-sqlx-step.sh"
 description = "Версия Rust в mise.toml и rust-toolchain.toml обязана совпадать"
 run = "./scripts/guard-toolchain-pin.sh"
 
+[tasks."guard:set-config"]
+description = "Actor-контекст обязан жить в транзакции: ни set_config(..,false), ни плоского SET app.*"
+run = "./scripts/guard-set-config.sh"
+
 [tasks."guard:selftest"]
 description = "Сторожа обязаны уметь краснеть: red/green-проверка самих сторожей"
 run = "./scripts/guard-selftest.sh"
@@ -71,5 +98,6 @@ depends = [
     "guard:core-graph",
     "guard:sqlx-step",
     "guard:toolchain-pin",
+    "guard:set-config",
     "guard:selftest",
 ]

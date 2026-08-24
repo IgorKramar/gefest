@@ -111,6 +111,42 @@ PY
 expect_red "зависимость через дефолтную фичу" "$C" "guard-core-graph.sh"
 echo
 
+# --- guard:set-config ------------------------------------------------------
+# Две формы сессионно-липкого контекста ловятся разными ветками сторожа, и
+# каждая получает свой красный образец: сторож, покрывающий одну форму из
+# двух, читается как покрывающий класс.
+echo "guard:set-config"
+G="$WORK/setcfg"; copy_tree "$G"
+expect_green "контекст только LOCAL" "$G" "guard-set-config.sh"
+printf '\npub fn probe() { let _ = "SELECT set_config(a, b, false)"; }\n' >> "$G/crates/db/src/pool.rs"
+expect_red "не-LOCAL set_config" "$G" "guard-set-config.sh"
+cp "$REPO_ROOT/crates/db/src/pool.rs" "$G/crates/db/src/pool.rs"
+printf "\nSET app.actor_id = '1';\n" >> "$G/crates/db/migrations/0006_rls.sql"
+expect_red "плоский SET app.*" "$G" "guard-set-config.sh"
+cp "$REPO_ROOT/crates/db/migrations/0006_rls.sql" "$G/crates/db/migrations/0006_rls.sql"
+printf "\nSET LOCAL app.actor_id = '1';\n" >> "$G/crates/db/migrations/0006_rls.sql"
+expect_green "SET LOCAL разрешён" "$G" "guard-set-config.sh"
+echo
+
+# --- Бит исполнения у скриптов ---------------------------------------------
+# Скрипт без бита +x в индексе git падает в CI с кодом 126 «Permission
+# denied». Локально это может не проявиться: bootstrap-roles.sh исполняет
+# docker-entrypoint, которому бит не нужен, — а шаг CI вызывает файл напрямую.
+echo "бит исполнения у скриптов"
+exec_ok=1
+while IFS= read -r entry; do
+    mode=${entry%% *}
+    path=${entry##* }
+    if [ "$mode" = "100755" ]; then
+        echo "  OK   $path исполняемый"
+    else
+        echo "  ПРОВАЛ $path в индексе как $mode — в CI даст exit 126" >&2
+        exec_ok=0
+    fi
+done < <(git -C "$REPO_ROOT" ls-files -s '*.sh' | awk '{print $1, $4}')
+[ "$exec_ok" -eq 0 ] && failures=1
+echo
+
 # --- Секретные паттерны .dockerignore --------------------------------------
 # .dockerignore использует правила Go filepath.Match: `*` НЕ пересекает `/`,
 # поэтому `*.key` ловит только корень контекста. .gitignore тот же паттерн

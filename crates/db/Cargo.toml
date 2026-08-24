@@ -6,10 +6,14 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-# Фича sqlx крейта hef-core здесь НЕ включается: в PR-1 её не включает никто.
-# Строка features = ["sqlx"] приходит тем же PR, что и первый реальный код
-# доступа к БД (правило H-4, ADR-0014).
 hef-core = { path = "../core" }
+sqlx = { workspace = true }
+uuid = { version = "1.25", features = ["v7"] }
+thiserror = "2"
+tokio = { workspace = true, features = ["rt", "macros", "time"] }
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 
 [lints]
 workspace = true

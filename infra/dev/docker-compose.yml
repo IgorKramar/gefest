@@ -1,0 +1,43 @@
+# Локальная база для разработки Гефеста.
+#
+# Порт 5434: 5432 и 5433 заняты соседними проектами на этой машине.
+#
+# Postgres 18 — текущий стабильный. ADR-0005 п. 11 запрещает использовать
+# специфику PG17 и оставляет путь на 18 свободным; специфика 18 тоже не
+# используется, версия выбрана как актуальная с длинной поддержкой.
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: gefest-postgres
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5434:5432"
+    environment:
+      POSTGRES_DB: gefest
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # Пароли ролей читает bootstrap-roles.sh — в SQL-файле их нет.
+      GEFEST_MIGRATOR_PASSWORD: ${GEFEST_MIGRATOR_PASSWORD:-migrator}
+      GEFEST_APP_PASSWORD: ${GEFEST_APP_PASSWORD:-app}
+      GEFEST_OWNER_PASSWORD: ${GEFEST_OWNER_PASSWORD:-owner}
+    volumes:
+      # Точка монтирования для PG 18 — /var/lib/postgresql, НЕ .../data.
+      # Образ 18 кладёт данные в подкаталог, чтобы `pg_upgrade --link` не
+      # упирался в границу монтирования. Старый путь образ видит как
+      # «unused mount/volume» и не стартует: проверено на первом запуске.
+      - gefest-pgdata:/var/lib/postgresql
+      # Исполняется один раз, при инициализации пустого тома.
+      - ./bootstrap-roles.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gefest"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+      # Без start_period проверка зеленеет во время первого запуска
+      # entrypoint — того, который выполняет initdb и затем ПЕРЕЗАПУСКАЕТ
+      # сервер. Подключение в это окно получает разрыв соединения.
+      start_period: 10s
+
+volumes:
+  gefest-pgdata:
