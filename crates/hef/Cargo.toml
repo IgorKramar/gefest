@@ -7,6 +7,10 @@ repository.workspace = true
 
 [dependencies]
 hef-api = { path = "../api" }
+hef-db = { path = "../db" }
+clap = { version = "4", features = ["derive"] }
+sqlx = { workspace = true }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 
 [lints]
 workspace = true

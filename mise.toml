@@ -21,6 +21,10 @@ run = "docker compose -f infra/dev/docker-compose.yml up -d --wait"
 description = "Остановить локальный Postgres, том сохранить"
 run = "docker compose -f infra/dev/docker-compose.yml down"
 
+[tasks.migrate]
+description = "Применить миграции схемы бинарём hef (DSN мигратора из DATABASE_URL)"
+run = "cargo run -p hef --quiet -- migrate"
+
 [tasks."db:reset"]
 description = "Снести том и поднять базу заново — роли создаются повторно"
 run = "docker compose -f infra/dev/docker-compose.yml down -v && docker compose -f infra/dev/docker-compose.yml up -d --wait"
