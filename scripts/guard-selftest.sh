@@ -128,6 +128,25 @@ printf "\nSET LOCAL app.actor_id = '1';\n" >> "$G/crates/db/migrations/0006_rls.
 expect_green "SET LOCAL разрешён" "$G" "guard-set-config.sh"
 echo
 
+# --- Бит исполнения у скриптов ---------------------------------------------
+# Скрипт без бита +x в индексе git падает в CI с кодом 126 «Permission
+# denied». Локально это может не проявиться: bootstrap-roles.sh исполняет
+# docker-entrypoint, которому бит не нужен, — а шаг CI вызывает файл напрямую.
+echo "бит исполнения у скриптов"
+exec_ok=1
+while IFS= read -r entry; do
+    mode=${entry%% *}
+    path=${entry##* }
+    if [ "$mode" = "100755" ]; then
+        echo "  OK   $path исполняемый"
+    else
+        echo "  ПРОВАЛ $path в индексе как $mode — в CI даст exit 126" >&2
+        exec_ok=0
+    fi
+done < <(git -C "$REPO_ROOT" ls-files -s '*.sh' | awk '{print $1, $4}')
+[ "$exec_ok" -eq 0 ] && failures=1
+echo
+
 # --- Секретные паттерны .dockerignore --------------------------------------
 # .dockerignore использует правила Go filepath.Match: `*` НЕ пересекает `/`,
 # поэтому `*.key` ловит только корень контекста. .gitignore тот же паттерн

@@ -216,9 +216,16 @@ jobs:
         with:
           filters: |
             migrations:
-              - 'crates/db/**'
-              - 'crates/core/**'
-              - 'Cargo.toml'
+              # Схема, тесты схемы и всё, что определяет их прогон.
+              #
+              # crates/db/src/** намеренно НЕ включён: правка прослойки без
+              # изменения схемы не требует поднимать базу, а job с
+              # service-контейнером — самый дорогой из пяти. Тесты схемы
+              # лежат в crates/db/tests/** и попадают сюда явно.
+              - 'crates/db/migrations/**'
+              - 'crates/db/tests/**'
+              - 'crates/core/src/enums.rs'
+              - 'infra/dev/bootstrap-roles.sh'
               - 'Cargo.lock'
               - 'mise.toml'
               - '.github/workflows/**'
