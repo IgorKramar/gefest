@@ -1,0 +1,234 @@
+name: CI
+
+# Никаких paths-фильтров на уровне workflow: отфильтрованный здесь job
+# никогда не рапортует статус, и PR с required check застревает навсегда в
+# ожидании. Фильтрация выполняется ВНУТРИ каждого job-а (ADR-0014).
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  # Обязательно и неочевидно: явный блок permissions обнуляет все
+  # неперечисленные области, а dorny/paths-filter на событии pull_request
+  # работает не через git, а запросом REST API к списку файлов PR. Без этого
+  # права шаг падает — и падают все пять job-ов на каждом PR.
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    name: rust
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # Нужна на событии push, где фильтрация идёт по git.
+          fetch-depth: 0
+          # Ни один шаг после checkout не обращается к API от имени токена.
+          persist-credentials: false
+
+      - id: changes
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            rust:
+              - 'crates/**'
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+              - '.sqlx/**'
+              # Файлы, управляющие самой сборкой. Без них PR, меняющий пин
+              # Rust или сам сторож, не запускал бы ни одной проверки —
+              # сторожа не срабатывали бы ровно на тех изменениях, против
+              # которых заведены.
+              - 'mise.toml'
+              - 'rust-toolchain.toml'
+              - 'scripts/**'
+              - '.github/workflows/**'
+
+      - name: Установить тулчейн
+        if: steps.changes.outputs.rust == 'true'
+        uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518 # v4.2.5
+        with:
+          # Только rust. Backend cargo: собирает инструменты из исходников —
+          # транзитивное дерево резолвится заново и build.rs исполняются на
+          # раннере. Ни один шаг PR-1 не вызывает sqlx-cli, платить за эту
+          # поверхность незачем.
+          install_args: rust
+
+      - name: Кэш cargo
+        if: steps.changes.outputs.rust == 'true'
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          # Пишем кэш только с main: иначе кэши веток вытесняют друг друга в
+          # общем бюджете репозитория, и деградация проявляется молча —
+          # полной пересборкой при неизменном lock-файле.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Форматирование
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run fmt:check
+
+      - name: Clippy
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run lint
+
+      - name: Сборка
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run build
+
+      - name: Тесты
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run test
+
+      - name: Сторож чистоты графа hef-core
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run guard:core-graph
+
+      - name: Сторож отложенного prepare --check
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run guard:sqlx-step
+
+      - name: Сторож согласованности пина Rust
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run guard:toolchain-pin
+
+      # Шага `sqlx prepare --check` здесь НЕТ намеренно, а не по забывчивости.
+      #
+      # В PR-1 сторожить нечего: ни одного макроса query!, нет каталога .sqlx,
+      # нет миграций. При этом prepare --check требует живого мигрированного
+      # Postgres и DATABASE_URL — ресурса, которого нет ни в контейнере задачи
+      # агента (ADR-0006: без docker и секретов БД), ни здесь без
+      # service-контейнера.
+      #
+      # Сторож, который нельзя пройти честно, не строгий — он порождает обходы
+      # (правку .sqlx руками, SQLX_OFFLINE=true в .env, уход с query! на
+      # нетипизированный sqlx::query) и перекладывает работу на владельца.
+      # См. docs/solutions/best-practices/storozh-protiv-nevozmozhnosti.md
+      #
+      # Шаг приходит вместе с первыми query! — одним изменением с
+      # service-контейнером Postgres. Чтобы это не зависело от памяти, стоит
+      # растяжка guard:sqlx-step выше: она краснеет, если query! появился, а
+      # шага prepare --check всё ещё нет.
+
+  front:
+    name: front
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: changes
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            front:
+              - 'web/**'
+
+      # Каталог web/ появляется в PR-2 вместе с dev-контуром. Job стартует и
+      # рапортует успех на его отсутствии — это и есть смысл фильтрации
+      # внутри job-а.
+      - name: Заглушка до появления web/
+        if: steps.changes.outputs.front == 'true'
+        run: |
+          echo "Каталог web/ изменён, но сборка фронта появится в PR-2." >&2
+          exit 1
+
+  migrations:
+    name: migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: changes
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            migrations:
+              - 'crates/db/migrations/**'
+
+      - name: Заглушка до появления миграций
+        if: steps.changes.outputs.migrations == 'true'
+        run: |
+          echo "Миграции изменены, но их прогон появится вместе с v1-ядром схемы." >&2
+          exit 1
+
+  contract:
+    name: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: changes
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            contract:
+              - 'tests/contract/**'
+              - 'crates/runner/**'
+              - 'crates/fake-executor/**'
+              - 'crates/core/**'
+              # Бамп пина CLI гоняет контрактные тесты по построению —
+              # ворота обновления образа исполнителя (ADR-0009).
+              - 'infra/executor-image/**'
+
+      - name: Установить тулчейн
+        if: steps.changes.outputs.contract == 'true'
+        uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518 # v4.2.5
+        with:
+          install_args: rust
+
+      - name: Кэш cargo
+        if: steps.changes.outputs.contract == 'true'
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      # Каталог tests/contract/ появляется вместе с первыми контрактными
+      # тестами S3-S5. Пока их нет, прогоняем тесты затронутых крейтов.
+      - name: Тесты крейтов контура
+        if: steps.changes.outputs.contract == 'true'
+        run: cargo test -p hef-core -p hef-runner -p hef-fake-executor --locked
+
+  infra:
+    name: infra
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - id: changes
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            infra:
+              - 'infra/**'
+
+      # Каталог infra/ и сборка образа приходят в PR-3 (= GF-6).
+      - name: Заглушка до появления infra/
+        if: steps.changes.outputs.infra == 'true'
+        run: |
+          echo "Каталог infra/ изменён, но сборка образа появится в PR-3 (GF-6)." >&2
+          exit 1
