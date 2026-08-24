@@ -13,5 +13,6 @@
 | [GF-5](GF-5-migracii-v1-yadra.md) | Миграции v1-ядра схемы (14 таблиц + audit_log, RLS) + смоук/отрицательные тесты | backlog | Ф0.5→Ф1 |
 | [GF-6](GF-6-infrastruktura-perimetra.md) | Ф0: инфраструктура периметра — два хоста, Headscale+DERP+exit node, passkeys, ключ pgcrypto, пул токенов, алерт-каналы | backlog | Ф0 |
 | [GF-7](GF-7-dokumentnyj-sloj.md) | Ф2: документный слой — CM6/Atomic-редактор, frontmatter, линки/FTS, периодические заметки, виды, импорт vault | backlog | Ф2 |
+| [GF-8](GF-8-vyvod-iz-supabase.md) | Ф1: вывод данных из Supabase — инвентаризация, миграция в свой Postgres, удаление проекта (D-14, срок — до конца Ф1) | backlog | Ф1 |
 
 Порядок: ~~GF-1~~ (done) → GF-5 (схема, ADR-0005 принят) → GF-2/GF-3, GF-6 — параллельно GF-2.

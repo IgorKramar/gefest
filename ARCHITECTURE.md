@@ -77,4 +77,6 @@
 - `docs/architecture/reviews/` — roast-артефакты.
 - `docs/architecture/decisions/` — ADR (индекс в README.md).
 - `docs/tasks/` — задачи Гефеста (GF-N), доска в README.
+- `docs/design/` — нормативные ТЗ облика (ADR-0015): `tz-web-panel.md`, `tz-mobile-pwa.md`. Источник истины для макетов; расхождения макетов возвращаются правкой ТЗ.
+- `docs/solutions/` — learnings проекта (`best-practices/`, далее по типам проблем); словарь терминов — `CONCEPTS.md` в корне.
 - `reference/` — клоны deepseek-harness и yao (в git не входят, учебный материал).
