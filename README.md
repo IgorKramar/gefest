@@ -19,7 +19,7 @@
 | Документ | Зачем |
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Главный вход: сводка системы, индекс решений, атрибуты качества, ограничения, анти-паттерны. Канон «куда класть код» — здесь, остальные документы ссылаются, а не дублируют |
-| [CONCEPTS.md](CONCEPTS.md) | Словарь проекта: сторож, дверь, интерим-регламент, указание, каузальный delivered, комплект брокера |
+| [CONCEPTS.md](CONCEPTS.md) | Словарь проекта: доменные сущности, именованные процессы и статусные понятия — процесс и ворота, доставка, брокер ресурсов |
 | [docs/architecture/decisions/](docs/architecture/decisions/) | ADR с индексом в [README](docs/architecture/decisions/README.md) — пятнадцать принятых решений |
 | [docs/architecture/decision-map.md](docs/architecture/decision-map.md) | Открытые решения (D-N), их зависимости и порядок циклов |
 | [docs/tasks/](docs/tasks/) | Задачи (GF-N) с доской в [README](docs/tasks/README.md) — единственное место учёта работ |
