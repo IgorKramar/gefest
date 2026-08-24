@@ -14,6 +14,13 @@
 //! Граница описана в `ARCHITECTURE.md`, раздел «Структура (C4, container)»;
 //! принята в ADR-0014.
 
+pub mod enums;
+
+pub use enums::{
+    CommandKind, DeliveryOutcome, EventOrigin, LookupEnum, SessionEventKind, SessionState,
+    TaskStatus,
+};
+
 /// Имя крейта. Существует, чтобы у скелета был предмет проверки: пустой
 /// `cargo test --workspace` зелен вхолостую и не доказывает, что тестовый
 /// контур вообще работает.
