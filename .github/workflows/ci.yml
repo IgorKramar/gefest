@@ -125,6 +125,10 @@ jobs:
         if: steps.changes.outputs.rust == 'true'
         run: mise run guard:toolchain-pin
 
+      - name: Сторож actor-контекста
+        if: steps.changes.outputs.rust == 'true'
+        run: mise run guard:set-config
+
       # Проверка самих сторожей: каждый обязан уметь покраснеть. Ревью PR-1
       # нашло два сторожа, уже неспособных сработать, — оба прошли ручную
       # проверку. Здесь же сверяются два списка проверок: объявленный в

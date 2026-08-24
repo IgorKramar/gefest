@@ -69,6 +69,10 @@ run = "./scripts/guard-sqlx-step.sh"
 description = "Версия Rust в mise.toml и rust-toolchain.toml обязана совпадать"
 run = "./scripts/guard-toolchain-pin.sh"
 
+[tasks."guard:set-config"]
+description = "Actor-контекст обязан жить в транзакции: ни set_config(..,false), ни плоского SET app.*"
+run = "./scripts/guard-set-config.sh"
+
 [tasks."guard:selftest"]
 description = "Сторожа обязаны уметь краснеть: red/green-проверка самих сторожей"
 run = "./scripts/guard-selftest.sh"
@@ -83,5 +87,6 @@ depends = [
     "guard:core-graph",
     "guard:sqlx-step",
     "guard:toolchain-pin",
+    "guard:set-config",
     "guard:selftest",
 ]
