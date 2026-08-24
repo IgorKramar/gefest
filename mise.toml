@@ -13,6 +13,18 @@ rust = "1.98.0"
 # раннере), а ни один шаг CI в PR-1 sqlx-cli не вызывает.
 "cargo:sqlx-cli" = "0.9.0"
 
+[tasks."db:up"]
+description = "Поднять локальный Postgres (порт 5434) и дождаться готовности"
+run = "docker compose -f infra/dev/docker-compose.yml up -d --wait"
+
+[tasks."db:down"]
+description = "Остановить локальный Postgres, том сохранить"
+run = "docker compose -f infra/dev/docker-compose.yml down"
+
+[tasks."db:reset"]
+description = "Снести том и поднять базу заново — роли создаются повторно"
+run = "docker compose -f infra/dev/docker-compose.yml down -v && docker compose -f infra/dev/docker-compose.yml up -d --wait"
+
 [tasks.build]
 description = "Собрать весь workspace"
 run = "cargo build --workspace --locked"
