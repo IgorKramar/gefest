@@ -1,0 +1,11 @@
+# Пин тулчейна для всего, что идёт мимо mise: редактор, rust-analyzer,
+# голый cargo. Внутри `mise run` побеждает пин mise.toml — он экспортирует
+# RUSTUP_TOOLCHAIN, который в порядке приоритетов rustup стоит выше этого
+# файла.
+#
+# Версия здесь и в mise.toml обязана совпадать. Равенство проверяет
+# `mise run guard:toolchain-pin`.
+[toolchain]
+channel = "1.98.0"
+components = ["rustfmt", "clippy"]
+profile = "minimal"

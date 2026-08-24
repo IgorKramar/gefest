@@ -33,4 +33,13 @@
 
 Light-масштаб: roast пропущен (процессное решение, полностью обратимо правкой workflow). Ревью — по факту первых зелёных прогонов GF-5/GF-2.
 
+2026-08-24 — **уточнение по факту реализации PR-1** ([план](../../plans/2026-08-24-001-feat-skelet-monorepy-plan.md)): ruleset на `main` заводится с **пустым bypass list** (решение владельца) — правила действуют и на владельца. Практическое следствие принято сознательно: послабление «доки владельца — напрямую» на практике не используется, владелец проводит через PR и документацию тоже. Разделять режимы на уровне ruleset сложнее, чем открыть PR. Состав ruleset — четыре правила, а не только проверки: require a pull request before merging; пять required status checks (`rust`, `front`, `migrations`, `contract`, `infra`); block force pushes; restrict deletions. Только required checks оставили бы прямой пуш открытым, и запрет из § Decision остался бы декларацией.
+
+**Включение — в два приёма, и окно незащищённости сводится к нулю.** Требование «сначала зелёный прогон» относится **только** к required status checks: GitHub не покажет имена job-ов, пока они ни разу не завершились успешно. Остальные три правила такой зависимости не имеют.
+
+1. **До мержа PR-1:** require a pull request before merging, block force pushes, restrict deletions.
+2. **После первого зелёного прогона:** пять required status checks.
+
+Обратный порядок (включить всё разом после мержа) оставлял бы `main` открытым для перезаписи истории и удаления ветки — двух отказов, которые не лечатся откатом коммита, — ради удобства одного захода.
+
 *Terminology pass: проза русская; идентификаторы (GitHub Actions, workflow, `cargo fmt/clippy/test`, `sqlx prepare --check`, `sqlx migrate run`, RLS, Bun, tsc, vite, `deploy.sh`, self-hosted runner, PR, main, D-N, GF-N, ADR-NNNN) без перевода; заголовки — verbatim Nygard.*

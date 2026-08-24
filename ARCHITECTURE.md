@@ -30,6 +30,19 @@
 
 **Раскладка репозитория (канон «куда класть код», ADR-0014):** `crates/core` — типы/перечисления-истина/ошибки (без tokio/axum; sqlx — optional feature для `db`); `crates/db` — прослойка доступа, query-макросы, migrations; `crates/runner` — супервизор, прослойка CLI, брокер комплектов; `crates/api` — axum-листенеры + rmcp + embed статики, модули по доменам (documents/chat/mcp/views); `crates/hef` — тонкий бинарь (clap-подкоманды); `crates/fake-executor` — тестовый симулятор (сырые JSONL-фикстуры); `web/` — React 19/Vite 8 (Bun); `infra/` — Dockerfile-ы (прод + executor-image), compose, deploy; `tests/contract/` — контрактные тесты S3–S5; `docs/` — архитектура/задачи/база знаний. Инструкции агентам ссылаются сюда, не дублируют.
 
+**Каталоги и имена пакетов различаются** (уточнено при реализации скелета, GF-5/PR-1): пути каталогов — как выше, имена пакетов несут префикс `hef-`, потому что пакет с именем `core` затеняет стандартный `core` во всех зависимых крейтах (`core::mem::…` перестаёт резолвиться, `E0433`).
+
+| Каталог | Пакет | Обращение в коде |
+|---|---|---|
+| `crates/core` | `hef-core` | `hef_core::` |
+| `crates/db` | `hef-db` | `hef_db::` |
+| `crates/runner` | `hef-runner` | `hef_runner::` |
+| `crates/api` | `hef-api` | `hef_api::` |
+| `crates/hef` | `hef` | бинарь |
+| `crates/fake-executor` | `hef-fake-executor` | `hef_fake_executor::` |
+
+Чистота дефолтного графа `hef-core` сторожится машинно: `mise run guard:core-graph` (белый список разрешённых пакетов). Состав фич sqlx уточнён под реальность 0.9 — см. Review trail ADR-0014.
+
 См. [c4-context.md](docs/architecture/diagrams/c4-context.md) (L1 — система в мире), [c4-container-orkestrator.md](docs/architecture/diagrams/c4-container-orkestrator.md) (приложение), [c4-component-binar.md](docs/architecture/diagrams/c4-component-binar.md) (крейты бинаря, ADR-0014) и [deployment-perimetr.md](docs/architecture/diagrams/deployment-perimetr.md) (хосты и сеть, ADR-0010/0014). Компоненты: один Rust-бинарь (axum: owner-листенер на Tailscale-IP с passkeys + MCP-листенер на контейнерном мосту; tokio: раннер-супервизор; внутри — прослойка CLI) ↔ Postgres (append-only журнал, задачи, команды, вехи, память, секреты pgcrypto) → контейнеры задач `claude -p --resume` (egress к Anthropic — через exit node EU). Периметр — tailnet (Headscale). Внешние: GitHub/GitLab (факты мержей — «done = состояние внешнего мира»), heartbeat, алерт-каналы, S3-бэкап. Машины состояний: [state-sessiya.md](docs/architecture/diagrams/state-sessiya.md), [state-ukazanie.md](docs/architecture/diagrams/state-ukazanie.md); данные: [er-v1-yadro.md](docs/architecture/diagrams/er-v1-yadro.md).
 
 ## Атрибуты качества (принятая поза)

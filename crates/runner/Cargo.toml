@@ -1,0 +1,12 @@
+[package]
+name = "hef-runner"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+hef-db = { path = "../db" }
+
+[lints]
+workspace = true

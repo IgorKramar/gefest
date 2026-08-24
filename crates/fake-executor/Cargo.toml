@@ -1,0 +1,12 @@
+[package]
+name = "hef-fake-executor"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+hef-core = { path = "../core" }
+
+[lints]
+workspace = true

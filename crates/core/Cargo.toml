@@ -1,0 +1,21 @@
+[package]
+name = "hef-core"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Единственная зависимость крейта — и та опциональная. Дефолтный граф core
+# обязан оставаться чистым: без tokio, axum и sqlx. Сторожится
+# scripts/guard-core-graph.sh.
+sqlx = { workspace = true, optional = true }
+
+[features]
+# Пустой default объявляется явно: иначе чужое default-features = true
+# протащит сюда фичи.
+default = []
+sqlx = ["dep:sqlx"]
+
+[lints]
+workspace = true
