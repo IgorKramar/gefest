@@ -63,4 +63,16 @@ CREATE ROLE gefest_owner LOGIN PASSWORD :'owner_pw';
 ALTER SCHEMA public OWNER TO gefest_migrator;
 SQL
 
+# Права на саму базу — отдельным вызовом: имя базы нельзя передать
+# параметром psql внутрь GRANT, а :"var" в этой позиции не разворачивается.
+#
+# CREATE ON DATABASE нужен тестам: #[sqlx::test] заводит служебную схему
+# _sqlx_test в maintenance-базе, чтобы вести учёт баз, созданных на каждый
+# тест. Без этого права весь набор падает на этапе подготовки с
+# `permission denied for database` — до единой проверки.
+psql -v ON_ERROR_STOP=1 \
+     --username "${POSTGRES_USER:-postgres}" \
+     --dbname "$POSTGRES_DB" \
+     -c "GRANT CREATE, CONNECT ON DATABASE \"$POSTGRES_DB\" TO gefest_migrator;"
+
 echo "bootstrap-roles: три роли созданы (migrator с CREATEDB, без SUPERUSER)."

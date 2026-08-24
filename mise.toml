@@ -34,8 +34,15 @@ description = "Собрать весь workspace"
 run = "cargo build --workspace --locked"
 
 [tasks.test]
-description = "Прогнать тесты всего workspace"
-run = "cargo test --workspace --locked"
+description = "Офлайн-тесты: весь workspace, кроме требующих базы"
+# hef-db исключён намеренно: его тесты на #[sqlx::test] без DATABASE_URL не
+# пропускаются, а паникуют. Задача обязана оставаться выполнимой без базы —
+# ею пользуется агент в контейнере, где базы нет по построению (ADR-0006).
+run = "cargo test --workspace --exclude hef-db --locked"
+
+[tasks."test:db"]
+description = "Тесты схемы и RLS — ТРЕБУЮТ живого Postgres и DATABASE_URL"
+run = "cargo test -p hef-db --locked"
 
 [tasks.fmt]
 description = "Отформатировать код"

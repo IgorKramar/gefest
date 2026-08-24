@@ -33,7 +33,16 @@ GRANT SELECT ON command_kinds, task_statuses TO gefest_app;
 
 -- Проекты и участники: чтение и заведение.
 GRANT SELECT, INSERT ON projects, actors TO gefest_app;
-GRANT SELECT, UPDATE ON project_counters TO gefest_app;
+
+-- INSERT на счётчик нужен не приложению напрямую, а триггеру
+-- projects_init_counter: обычный триггер выполняется с правами вызывающего,
+-- поэтому создание проекта ролью приложения упиралось бы в
+-- `permission denied for table project_counters`. Найдено тестом, который
+-- создаёт проект от имени gefest_app.
+--
+-- Прямая вставка руками при этом бессмысленна: строку уже создал триггер, а
+-- первичный ключ не даст завести вторую для того же проекта.
+GRANT SELECT, INSERT, UPDATE ON project_counters TO gefest_app;
 
 GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO gefest_app;
 
