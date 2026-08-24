@@ -39,6 +39,12 @@ Light-масштаб: roast пропущен (процессное решени�
 
 2026-08-24 — **уточнение по факту реализации PR-1** ([план](../../plans/2026-08-24-001-feat-skelet-monorepy-plan.md)): ruleset на `main` заводится с **пустым bypass list** (решение владельца) — правила действуют и на владельца. Практическое следствие принято сознательно: послабление «доки владельца — напрямую» на практике не используется, владелец проводит через PR и документацию тоже. Разделять режимы на уровне ruleset сложнее, чем открыть PR. Состав ruleset — четыре правила, а не только проверки: require a pull request before merging; пять required status checks (`rust`, `front`, `migrations`, `contract`, `infra`); block force pushes; restrict deletions. Только required checks оставили бы прямой пуш открытым, и запрет из § Decision остался бы декларацией.
 
+**Заведено 2026-08-24, ruleset `main protection` (id 21280793), enforcement `active`.** Состав: `pull_request` (0 обязательных апрувов — человек в проекте один, но мерж только через PR), `required_status_checks` с пятью именами, `non_fast_forward`, `deletion`; `bypass_actors` пуст. Проверено отказом, а не только настройкой: прямой пуш в `main` отклонён с `push declined due to repository rule violations` / `5 of 5 required status checks are expected`.
+
+`strict_required_status_checks_policy` = `false`: требование обновлять ветку до `main` перед мержем добавляет ручную синхронизацию на каждый PR и оправдается, когда агенты начнут открывать PR параллельно, — не раньше.
+
+**Предусловие, которого не было в решении:** ни rulesets, ни классическая защита веток не работают на приватном репозитории без GitHub Pro (`Upgrade to GitHub Pro or make this repository public`). Репозиторий сделан **публичным** 2026-08-24 — история проверена на секреты перед публикацией (84 коммита: ни токенов, ни ключей, ни DSN, ни IP). Раскрывается устройство системы, но не доступ к ней.
+
 **Включение — в два приёма, и окно незащищённости сводится к нулю.** Требование «сначала зелёный прогон» относится **только** к required status checks: GitHub не покажет имена job-ов, пока они ни разу не завершились успешно. Остальные три правила такой зависимости не имеют.
 
 1. **До мержа PR-1:** require a pull request before merging, block force pushes, restrict deletions.
