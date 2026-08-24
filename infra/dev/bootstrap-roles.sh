@@ -49,6 +49,18 @@ CREATE ROLE gefest_app LOGIN PASSWORD :'app_pw';
 
 -- gefest_owner — отладочный контур владельца. Тоже не владелец объектов.
 CREATE ROLE gefest_owner LOGIN PASSWORD :'owner_pw';
+
+-- Схема отдаётся мигратору во владение.
+--
+-- В PG 15+ роль PUBLIC лишена CREATE на схеме public, поэтому без этой
+-- строки первая же миграция падает с `permission denied for schema public`.
+-- Владение, а не GRANT CREATE: мигратор обязан владеть объектами схемы —
+-- на этом стоит вся конструкция RLS (app и owner не владельцы, а значит
+-- политики к ним применяются).
+--
+-- В базах, которые #[sqlx::test] создаёт на каждый тест, схема достаётся
+-- создателю — то есть тому же мигратору, — поэтому там строка не нужна.
+ALTER SCHEMA public OWNER TO gefest_migrator;
 SQL
 
 echo "bootstrap-roles: три роли созданы (migrator с CREATEDB, без SUPERUSER)."
