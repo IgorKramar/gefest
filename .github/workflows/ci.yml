@@ -77,6 +77,17 @@ jobs:
           # поверхность незачем.
           install_args: rust
 
+      # rust-toolchain.toml объявляет components = ["rustfmt", "clippy"], но
+      # mise ставит тулчейн через переменную RUSTUP_TOOLCHAIN, а она обходит
+      # файл — components оттуда не читаются. На чистом раннере это первый же
+      # красный шаг: «cargo-fmt is not installed for the toolchain 1.98.0».
+      # Локально дефект не виден, потому что компоненты обычно уже стоят
+      # системно — проверка на подготовленной машине принимает её состояние
+      # за общее.
+      - name: Компоненты тулчейна
+        if: steps.changes.outputs.rust == 'true'
+        run: rustup component add rustfmt clippy
+
       - name: Кэш cargo
         if: steps.changes.outputs.rust == 'true'
         uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
@@ -157,14 +168,12 @@ jobs:
             front:
               - 'web/**'
 
-      # Каталог web/ появляется в PR-2 вместе с dev-контуром. Job стартует и
-      # рапортует успех на его отсутствии — это и есть смысл фильтрации
-      # внутри job-а.
-      - name: Заглушка до появления web/
+      # Сборка фронта приходит в PR-2 вместе с dev-контуром и заменит это
+      # предупреждение. Job завершается успешно — см. пояснение у infra.
+      - name: Предупреждение о web/
         if: steps.changes.outputs.front == 'true'
         run: |
-          echo "Каталог web/ изменён, но сборка фронта появится в PR-2." >&2
-          exit 1
+          echo "::warning::Каталог web/ изменён, но сборка фронта появится в PR-2."
 
   migrations:
     name: migrations
@@ -183,11 +192,11 @@ jobs:
             migrations:
               - 'crates/db/migrations/**'
 
-      - name: Заглушка до появления миграций
+      # Прогон миграций приходит вместе с v1-ядром схемы (следующий PR GF-5).
+      - name: Предупреждение о миграциях
         if: steps.changes.outputs.migrations == 'true'
         run: |
-          echo "Миграции изменены, но их прогон появится вместе с v1-ядром схемы." >&2
-          exit 1
+          echo "::warning::Миграции изменены, но их прогон появится вместе с v1-ядром схемы."
 
   contract:
     name: contract
@@ -252,18 +261,14 @@ jobs:
           filters: |
             infra:
               - 'infra/**'
-              # executor-image исключён намеренно: этот подкаталог уже живой —
-              # бамп пина CLI гоняет контрактные тесты по построению (ворота
-              # ADR-0009, см. contract-job). Без исключения тот же коммит
-              # попадал бы и сюда, в заглушку с exit 1, и у легитимного
-              # изменения не было бы честного пути до зелёного на required
-              # check. Это ровно тот сторож против невозможности, который
-              # запрещает docs/solutions/best-practices/storozh-protiv-nevozmozhnosti.md
-              - '!infra/executor-image/**'
 
-      # Остальной infra/ и сборка образа приходят в PR-3 (= GF-6).
-      - name: Заглушка до появления infra/
+      # Сборка образа приходит в PR-3 (= GF-6) и заменит это предупреждение.
+      # Job завершается УСПЕШНО: его роль в PR-1 — существовать, чтобы имя
+      # зарегистрировалось для required checks. Падение на изменении, которое
+      # ещё не поддержано конструкцией, — блокировка, а не защита: у автора
+      # легитимной правки (например бампа пина CLI в infra/executor-image,
+      # ворота ADR-0009) не было бы честного пути до зелёного.
+      - name: Предупреждение об infra/
         if: steps.changes.outputs.infra == 'true'
         run: |
-          echo "Каталог infra/ изменён, но сборка образа появится в PR-3 (GF-6)." >&2
-          exit 1
+          echo "::warning::Каталог infra/ изменён, но сборка образа появится в PR-3 (GF-6)."
