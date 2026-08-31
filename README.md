@@ -2,7 +2,7 @@
 
 **Самостоятельный оркестратор команды Claude Code-агентов.** Один владелец ставит задачи, видит живые статусы, отдаёт указания с подтверждаемой доставкой и подтверждает решения — из панели на втором мониторе или с телефона. Имя — по кузнецу с золотыми автоматонами, первыми разумными помощниками в литературе; CLI называется `hef`.
 
-Репозиторий — единственное место, где живёт всё: архитектура, решения, задачи и исследовательская база. Vault для Гефеста не используется с первого дня ([ADR-0002](docs/architecture/decisions/0002-gefest-s-nulya-bez-vault.md)).
+Репозиторий — место архитектуры, решений и исследовательской базы; они принимаются вместе с кодом и ревьюются в PR. **Учёт задач с 31.08 живёт в vault владельца** ([ADR-0016](docs/architecture/decisions/0016-uchyot-zadach-pereezzhaet-v-vault.md), отменяет отвязку от vault из [ADR-0002](docs/architecture/decisions/0002-gefest-s-nulya-bez-vault.md)).
 
 ## Состояние
 
@@ -22,7 +22,7 @@
 | [CONCEPTS.md](CONCEPTS.md) | Словарь проекта: доменные сущности, именованные процессы и статусные понятия — процесс и ворота, доставка, брокер ресурсов |
 | [docs/architecture/decisions/](docs/architecture/decisions/) | ADR с индексом в [README](docs/architecture/decisions/README.md) — пятнадцать принятых решений |
 | [docs/architecture/decision-map.md](docs/architecture/decision-map.md) | Открытые решения (D-N), их зависимости и порядок циклов |
-| [docs/tasks/](docs/tasks/) | Задачи (GF-N) с доской в [README](docs/tasks/README.md) — единственное место учёта работ |
+| [docs/tasks/](docs/tasks/) | Указатель: учёт работ переехал в vault (ADR-0016) |
 | [docs/design/](docs/design/) | Нормативные ТЗ облика: [веб-панель](docs/design/tz-web-panel.md), [мобильный PWA](docs/design/tz-mobile-pwa.md) |
 | [docs/solutions/](docs/solutions/) | Learnings проекта |
 

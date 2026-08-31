@@ -2,6 +2,7 @@
 
 | № | Дата | Статус | Решение |
 |---|---|---|---|
+| [0016](0016-uchyot-zadach-pereezzhaet-v-vault.md) | 2026-08-31 | Accepted (supersedes 0002 in part) | Учёт задач переезжает в vault владельца; ADR, архитектура, планы и разборы остаются в репозитории; `docs/tasks/` удалён, копии в двух местах разошлись бы молча |
 | [0015](0015-dizajn-paneli-kuznitsa.md) | 2026-08-21 | Accepted | Дизайн панели: «тёмная кузница» (огонь = работа), Tektur/Golos/JetBrains Mono, Base UI под своей айдентикой, сайдбар-IA, PWA Агенты·Решения·Чат·Задачи; нормативные ТЗ в docs/design/ |
 | [0014](0014-monorepa-domennaya-shestyorka.md) | 2026-08-21 | Accepted | Монорепа: `crates/{core,db,runner,api,hef,fake-executor}`+`web/`+`infra/`; mise tasks; `.sqlx`-сторож; embed за флагом `embed-static`; образ из GHCR (сборки на прод-VM нет); CI-фильтры без слепых зон; интерим «SQL меняет владелец» |
 | [0013](0013-dokumenty-cm6-atomic-frontmatter-vidy.md) | 2026-08-21 | Accepted | Документы: CM6/Atomic Editor (Live Preview, план Б — форк); frontmatter — источник метаданных; `saved_views` вместо DQL; канон агентам через pending; выборочный импорт vault; v1 без графа/GUI-видов |
@@ -15,5 +16,5 @@
 | [0005](0005-shema-dannyh-zhurnal-plus-state.md) | 2026-08-20 | Accepted | Схема: «журнал + состояние» одной транзакцией; v1-ядро 14 таблиц + audit_log; RLS с v1; агенты только через API/MCP; сырьё сессий файлами вне бэкапа |
 | [0004](0004-stek-rust-axum-react-vite.md) | 2026-08-20 | Accepted | Стек: Rust (axum/tokio/sqlx/rmcp) одним бинарём + React 19/Vite 8/TanStack/Tailwind 4; Bun — toolchain, не прод-рантайм; мотив — биллинг по ресурсам (C-С1) и родной язык владельца |
 | [0003](0003-kanon-pamyati-postgres-pgvector-dver.md) | 2026-08-20 | Accepted | Канон памяти — в Postgres Гефеста (скоупы/классы/слои, бюджеты инжекции, владелец-редактор, приватность правилом); pgvector — дверь с наблюдаемым замер-триггером; EverOS — донор идей |
-| [0002](0002-gefest-s-nulya-bez-vault.md) | 2026-08-20 | Accepted | Гефест пишется с нуля (AD не переделывается, остаётся страховкой); вся фиксация разработки — только в репозитории Гефеста, vault не используется с первого дня |
+| [0002](0002-gefest-s-nulya-bez-vault.md) | 2026-08-20 | Accepted (superseded in part by 0016) | Гефест пишется с нуля (AD не переделывается, остаётся страховкой); вся фиксация разработки — только в репозитории Гефеста, vault не используется с первого дня |
 | [0001](0001-sobstvennyj-orkestrator-claude-code.md) | 2026-08-20 | Accepted (amended by 0002) | Собственный тонкий оркестратор Claude Code-агентов вместо готовых платформ (yao, DSH); Ф0 — подтверждаемая доставка через владение процессом; Ф0.5 — проектирование по образцам yao/DSH |
